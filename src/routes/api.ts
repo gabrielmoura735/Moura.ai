@@ -375,8 +375,46 @@ apiRouter.post('/builder/microsaas', authMiddleware, (req: AuthenticatedRequest,
 });
 
 // ==============================================================================
-// 6. ESTÚDIO DE MÍDIA (VÍDEOS, REELS & CARROSSEIS)
+// 6. ESTÚDIO DE MÍDIA (IMAGENS ESTILO CHATGPT, VÍDEOS, REELS & CARROSSEIS)
 // ==============================================================================
+apiRouter.post('/media/generate-image', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user!.id;
+  const quota = DB.checkQuota(userId, 'images');
+
+  if (!quota.allowed) {
+    res.status(429).json({
+      error: `Limite diário de geração de imagens atingido para o ${quota.planName} (${quota.current}/${quota.limit}). Faça upgrade para cotas de até 200/dia!`,
+      quota
+    });
+    return;
+  }
+
+  const { prompt, style, aspectRatio } = req.body;
+  if (!prompt) {
+    res.status(400).json({ error: 'O prompt da imagem é obrigatório.' });
+    return;
+  }
+
+  try {
+    const image = await mediaService.generateImage({
+      prompt,
+      style: style || 'cosmic',
+      aspectRatio: aspectRatio || '1:1'
+    });
+
+    DB.incrementUsage(userId, 'images', 1500);
+    DB.logAudit(userId, 'ai_image_generated', 'generation', { prompt, style, aspectRatio });
+
+    res.json({
+      success: true,
+      image,
+      remainingDaily: quota.limit - (quota.current + 1)
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Erro ao gerar imagem: ' + err.message });
+  }
+});
+
 apiRouter.post('/media/viral-script', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
   const quota = DB.checkQuota(userId, 'videos');

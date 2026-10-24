@@ -101,6 +101,10 @@
           <i class="fa-solid fa-chart-pie w-5 text-center"></i>
           <span>Dashboard Geral</span>
         </button>
+        <button onclick="navigate('image-generator')" id="nav-image-generator" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-wand-magic-sparkles w-5 text-center text-pink-400"></i>
+          <span>Imagens por IA (Estilo GPT)</span>
+        </button>
         <button onclick="navigate('whatsapp-sites')" id="nav-whatsapp-sites" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-brands fa-whatsapp w-5 text-center text-emerald-400"></i>
           <span>Sites para WhatsApp</span>
@@ -170,7 +174,7 @@
     <!-- Top Navigation Header -->
     <header class="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
       <div class="flex items-center gap-4">
-        <img src="/assets/logo.png" alt="Logo" class="w-8 h-8 glow-planet md:hidden">
+        <img src="/assets/logo.png" alt="Logo" class="w-8 h-8 glow-planet md:hidden object-contain">
         <h1 class="text-lg font-bold text-white tracking-tight" id="view-title">Dashboard Geral</h1>
         <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -202,12 +206,12 @@
             </span>
             <h2 class="text-3xl font-extrabold text-white mb-3">Sua central inteligente para criar produtos digitais, sites e personagens</h2>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Gere sites para WhatsApp com fechamento em 1 clique, crie personagens com histórias vivas, roteiros virais e carrosséis com visualizador integrado. Tokens 100% ilimitados.
+              Gere imagens inline estilo ChatGPT, crie sites para WhatsApp com fechamento em 1 clique, personagens com histórias vivas e automações no n8n. Tokens 100% ilimitados.
             </p>
             <div class="flex flex-wrap gap-3">
-              <button onclick="navigate('characters')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
-                <i class="fa-solid fa-masks-theater"></i>
-                <span>Criar Personagem por IA</span>
+              <button onclick="navigate('image-generator')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-bold text-sm shadow-lg shadow-pink-500/25 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <span>Gerar Imagem por IA</span>
               </button>
               <button onclick="navigate('whatsapp-sites')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all flex items-center gap-2">
                 <i class="fa-brands fa-whatsapp text-lg"></i>
@@ -230,12 +234,12 @@
 
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div class="flex items-center justify-between mb-3 text-slate-400">
-              <span class="text-xs font-semibold">Cota Diária de Sites</span>
-              <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+              <span class="text-xs font-semibold">Cota Diária de Imagens</span>
+              <i class="fa-solid fa-image text-pink-400"></i>
             </div>
-            <div class="text-2xl font-black text-white" id="dash-sites-quota">0 / 200</div>
+            <div class="text-2xl font-black text-white" id="dash-images-quota">0 / 200</div>
             <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
-              <div class="bg-emerald-500 h-full w-[2%]"></div>
+              <div class="bg-pink-500 h-full w-[2%]"></div>
             </div>
           </div>
 
@@ -260,7 +264,96 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 2: FÁBRICA DE PERSONAGENS POR IA (NOVO!) -->
+      <!-- VIEW 2: GERADOR DE IMAGENS POR IA (ESTILO CHATGPT / DALL-E) -->
+      <!-- ==================================================================== -->
+      <section id="view-image-generator" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles text-pink-400"></i>
+              <span>Gerador de Imagens por IA (Estilo ChatGPT)</span>
+            </h2>
+            <p class="text-slate-400 text-sm">Digite qualquer ideia ou prompt e visualize a imagem renderizada na hora diretamente na tela com download em 1 clique.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-pink-500/10 text-pink-400 border border-pink-500/20">
+            8K Visual Canvas
+          </span>
+        </div>
+
+        <!-- Prompt Bar & Settings -->
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4 shadow-xl">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Descreva a imagem que você deseja criar:</label>
+            <textarea id="img-input-prompt" rows="3" class="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-pink-500 outline-none leading-relaxed" placeholder="Ex: Um planeta violeta com anéis brilhantes de cristal orbitando em uma nebulosa cósmica estrelada, iluminação cinematográfica 8k...">Um planeta violeta cósmico com anéis de cristal brilhando em uma nebulosa estelar ultra detalhada, arte futurista 8k</textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Formato / Proporção:</label>
+              <select id="img-input-ratio" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-pink-500 outline-none">
+                <option value="1:1" selected>Quadrado 1:1 (Feed Instagram / Avatar)</option>
+                <option value="16:9">Paisagem 16:9 (Desktop / YouTube Thumbnail)</option>
+                <option value="9:16">Vertical 9:16 (Stories / Reels / TikTok)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Estilo Visual:</label>
+              <select id="img-input-style" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-pink-500 outline-none">
+                <option value="cosmic" selected>Cósmico Violeta (Identidade Moura.ai)</option>
+                <option value="photorealistic">Fotorrealista 8K Hiper-detalhado</option>
+                <option value="cyberpunk">Cyberpunk Neon & Hologramas</option>
+                <option value="anime">Anime / Ilustração Conceitual</option>
+                <option value="3d_render">Render 3D Octane Cinema 4D</option>
+              </select>
+            </div>
+          </div>
+
+          <button onclick="generateImageLikeChatGPT()" id="btn-generate-image" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white font-bold text-sm shadow-lg shadow-pink-500/25 transition-all flex items-center justify-center gap-2">
+            <i class="fa-solid fa-paintbrush"></i>
+            <span>Gerar Imagem com IA e Visualizar Agora</span>
+          </button>
+        </div>
+
+        <!-- Chat / Inline Image Viewer Display (Estilo ChatGPT) -->
+        <div id="image-feed-container" class="space-y-6">
+          <!-- Placeholder de carregamento dinâmico -->
+          <div id="img-loading-shimmer" class="p-8 rounded-3xl bg-slate-900 border border-slate-800 text-center space-y-3 hidden">
+            <div class="w-12 h-12 rounded-full border-4 border-pink-500 border-t-transparent animate-spin mx-auto"></div>
+            <h3 class="text-base font-bold text-white">A Moura.ai está pintando sua imagem cósmica...</h3>
+            <p class="text-xs text-slate-400">Aplicando gradientes volumétricos, estrelas e iluminação 8k.</p>
+          </div>
+
+          <!-- Card de Exibição da Imagem Gerada (Render inline) -->
+          <div id="latest-image-card" class="p-6 rounded-3xl bg-slate-900 border border-slate-800 space-y-4 shadow-2xl hidden">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold px-3 py-1 rounded-full bg-pink-500/10 text-pink-400 border border-pink-500/20" id="img-card-style-badge">ESTILO CÓSMICO</span>
+              <span class="text-xs text-slate-400 font-mono" id="img-card-seed">#SEED-MOURA</span>
+            </div>
+
+            <!-- Imagem Gerada Visualizável -->
+            <div class="rounded-2xl overflow-hidden border border-slate-800 bg-black flex items-center justify-center max-h-[560px]">
+              <img id="generated-image-element" src="" alt="Imagem gerada pela Moura.ai" class="w-full h-auto object-contain max-h-[560px]">
+            </div>
+
+            <p class="text-xs text-slate-300 italic px-1" id="img-card-prompt-text"></p>
+
+            <!-- Ações Diretas -->
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="downloadGeneratedImage()" class="px-5 py-2.5 rounded-xl bg-pink-600 hover:bg-pink-500 text-white font-bold text-xs shadow-lg shadow-pink-600/20 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-download"></i>
+                <span>Baixar Imagem em Alta Resolução (PNG)</span>
+              </button>
+              <button onclick="copyGeneratedPrompt()" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs transition-all flex items-center gap-2">
+                <i class="fa-solid fa-copy text-purple-400"></i>
+                <span>Copiar Prompt</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 3: FÁBRICA DE PERSONAGENS POR IA -->
       <!-- ==================================================================== -->
       <section id="view-characters" class="space-y-6 hidden">
         <div class="flex items-center justify-between">
@@ -277,7 +370,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Criador Form -->
           <div class="lg:col-span-5 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Personagem:</label>
@@ -308,7 +400,6 @@
             </button>
           </div>
 
-          <!-- Cards de Personagens Existentes -->
           <div class="lg:col-span-7 space-y-4">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-users text-fuchsia-400"></i>
@@ -320,7 +411,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 3: CARROSSÉIS SOCIAIS COM VISUALIZADOR SLIDE A SLIDE (NOVO!) -->
+      <!-- VIEW 4: CARROSSÉIS SOCIAIS COM VISUALIZADOR SLIDE A SLIDE -->
       <!-- ==================================================================== -->
       <section id="view-carousels" class="space-y-6 hidden">
         <div>
@@ -347,7 +438,6 @@
             <span>Gerar Carrossel com 5 Slides</span>
           </button>
 
-          <!-- Interactive Slide Viewer -->
           <div id="carousel-viewer-container" class="pt-6 border-t border-slate-800 hidden space-y-4">
             <div class="flex items-center justify-between">
               <span class="text-xs font-bold text-slate-400" id="carousel-slide-indicator">Slide 1 de 5</span>
@@ -361,7 +451,6 @@
               </div>
             </div>
 
-            <!-- Card Visual do Slide -->
             <div id="carousel-slide-card" class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-purple-950/40 border-2 border-purple-500/40 min-h-[260px] flex flex-col justify-between shadow-2xl relative">
               <div>
                 <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 mb-3 inline-block" id="slide-badge">CAPA</span>
@@ -378,7 +467,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 4: CONFIGURAÇÕES DO PERFIL, TEMAS & CLASSIFICAÇÃO (NOVO!) -->
+      <!-- VIEW 5: CONFIGURAÇÕES DO PERFIL, TEMAS & CLASSIFICAÇÃO -->
       <!-- ==================================================================== -->
       <section id="view-profile" class="space-y-6 hidden">
         <div>
@@ -390,7 +479,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <!-- Dados Pessoais & Temas -->
           <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-id-card text-purple-400"></i>
@@ -405,7 +493,6 @@
               <input type="text" id="profile-dob" placeholder="15/08/1998" value="15/08/1998" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
             </div>
 
-            <!-- Seletor de Temas -->
             <div class="pt-4 border-t border-slate-800">
               <label class="block text-xs font-semibold text-slate-300 mb-2">Tema Visual da Plataforma:</label>
               <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -433,7 +520,6 @@
             </div>
           </div>
 
-          <!-- Classificação Indicativa & Termo de Responsabilidade -->
           <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-shield-halved text-purple-400"></i>
@@ -453,7 +539,6 @@
               </select>
             </div>
 
-            <!-- Toggle Verificação de Imagem -->
             <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
               <div>
                 <span class="text-xs font-bold text-white block">Verificação de Imagem Ativa</span>
@@ -462,7 +547,6 @@
               <input type="checkbox" id="profile-image-guard" checked class="w-5 h-5 accent-purple-500 rounded cursor-pointer">
             </div>
 
-            <!-- Termo de Responsabilidade -->
             <div class="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 text-xs text-purple-200 leading-relaxed">
               <strong class="text-white flex items-center gap-1.5 mb-1">
                 <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Termo de Autonomia & Responsabilidade:
@@ -479,7 +563,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 5: SITES PARA WHATSAPP -->
+      <!-- VIEW 6: SITES PARA WHATSAPP -->
       <!-- ==================================================================== -->
       <section id="view-whatsapp-sites" class="space-y-6 hidden">
         <div class="flex items-center justify-between">
@@ -537,7 +621,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 6: MULTI-AGENTES STUDIO -->
+      <!-- VIEW 7: MULTI-AGENTES STUDIO -->
       <!-- ==================================================================== -->
       <section id="view-studio" class="space-y-6 hidden">
         <div>
@@ -567,7 +651,32 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 7: VÍDEOS, SHORTS & REELS -->
+      <!-- VIEW 8: MICRO-SAAS & EMPRESAS -->
+      <!-- ==================================================================== -->
+      <section id="view-microsaas" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Fábrica de Micro-SaaS & Empresas Completas</h2>
+          <p class="text-slate-400 text-sm">Geração de arquitetura completa de software com frontend, backend e painel de negócios.</p>
+        </div>
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Micro-SaaS:</label>
+              <input type="text" id="saas-input-name" value="AutoZap CRM" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nicho / Mercado:</label>
+              <input type="text" id="saas-input-niche" value="Imobiliárias e Corretores" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm outline-none">
+            </div>
+          </div>
+          <button onclick="navigate('whatsapp-sites')" class="px-6 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm transition-all">
+            Criar Estrutura de Negócio Completa
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 9: VÍDEOS, SHORTS & REELS -->
       <!-- ==================================================================== -->
       <section id="view-media-studio" class="space-y-6 hidden">
         <div>
@@ -601,7 +710,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 8: AUTOMAÇÕES N8N -->
+      <!-- VIEW 10: AUTOMAÇÕES N8N -->
       <!-- ==================================================================== -->
       <section id="view-n8n-automations" class="space-y-6 hidden">
         <div>
@@ -655,7 +764,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 9: AUTOCORREÇÃO (SELF-HEALING) -->
+      <!-- VIEW 11: AUTOCORREÇÃO (SELF-HEALING) -->
       <!-- ==================================================================== -->
       <section id="view-self-healing" class="space-y-6 hidden">
         <div>
@@ -679,7 +788,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 10: PLANOS & COTAS -->
+      <!-- VIEW 12: PLANOS & COTAS -->
       <!-- ==================================================================== -->
       <section id="view-plans" class="space-y-6 hidden">
         <div class="text-center max-w-xl mx-auto">
@@ -771,7 +880,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 11: PAINEL ADMIN -->
+      <!-- VIEW 13: PAINEL ADMIN -->
       <!-- ==================================================================== -->
       <section id="view-admin" class="space-y-6 hidden">
         <div>
@@ -795,9 +904,10 @@
     let currentPreviewHtml = '';
     let currentCarouselSlides = [];
     let currentSlideIndex = 0;
+    let lastGeneratedImageData = null;
 
     function navigate(viewId) {
-      const views = ['dashboard', 'whatsapp-sites', 'characters', 'carousels', 'studio', 'microsaas', 'media-studio', 'n8n-automations', 'self-healing', 'plans', 'profile', 'admin'];
+      const views = ['dashboard', 'image-generator', 'whatsapp-sites', 'characters', 'carousels', 'studio', 'microsaas', 'media-studio', 'n8n-automations', 'self-healing', 'plans', 'profile', 'admin'];
       views.forEach(v => {
         const el = document.getElementById(`view-${v}`);
         const navBtn = document.getElementById(`nav-${v}`);
@@ -818,6 +928,7 @@
 
       const titles = {
         'dashboard': 'Dashboard Geral',
+        'image-generator': 'Gerador de Imagens por IA (Estilo ChatGPT)',
         'whatsapp-sites': 'Sites para WhatsApp',
         'characters': 'Fábrica de Personagens por IA',
         'carousels': 'Carrosséis Sociais Interativos',
@@ -834,6 +945,73 @@
 
       if (viewId === 'characters') loadCharacters();
       if (viewId === 'admin') loadAdminLogs();
+    }
+
+    // Gerador de Imagens por IA (Estilo ChatGPT)
+    async function generateImageLikeChatGPT() {
+      const prompt = document.getElementById('img-input-prompt').value;
+      const style = document.getElementById('img-input-style').value;
+      const aspectRatio = document.getElementById('img-input-ratio').value;
+      const btn = document.getElementById('btn-generate-image');
+      const shimmer = document.getElementById('img-loading-shimmer');
+      const resultCard = document.getElementById('latest-image-card');
+
+      if (!prompt) {
+        alert('Por favor, informe a descrição da imagem que deseja criar.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Pintando sua Imagem...';
+      shimmer.classList.remove('hidden');
+      resultCard.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/media/generate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ prompt, style, aspectRatio })
+        });
+        const data = await res.json();
+
+        if (data.image && data.image.imageUrl) {
+          lastGeneratedImageData = data.image;
+          document.getElementById('generated-image-element').src = data.image.imageUrl;
+          document.getElementById('img-card-style-badge').innerText = `ESTILO ${data.image.style.toUpperCase()}`;
+          document.getElementById('img-card-seed').innerText = `#SEED-${data.image.seed}`;
+          document.getElementById('img-card-prompt-text').innerText = `"${data.image.prompt}"`;
+
+          shimmer.classList.add('hidden');
+          resultCard.classList.remove('hidden');
+          resultCard.scrollIntoView({ behavior: 'smooth' });
+        } else if (data.error) {
+          alert(data.error);
+          shimmer.classList.add('hidden');
+        }
+      } catch (err) {
+        alert('Erro ao gerar imagem por IA');
+        shimmer.classList.add('hidden');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-paintbrush"></i> Gerar Imagem com IA e Visualizar Agora';
+      }
+    }
+
+    // Download da imagem gerada
+    function downloadGeneratedImage() {
+      if (!lastGeneratedImageData || !lastGeneratedImageData.imageUrl) return;
+      const a = document.createElement('a');
+      a.href = lastGeneratedImageData.imageUrl;
+      a.download = `moura-ai-${Date.now()}.svg`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    function copyGeneratedPrompt() {
+      if (!lastGeneratedImageData) return;
+      navigator.clipboard.writeText(lastGeneratedImageData.prompt);
+      alert('Prompt copiado para a área de transferência!');
     }
 
     // Gerador de Personagem

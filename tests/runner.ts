@@ -133,16 +133,27 @@ async function runTestSuite() {
   assert(carousel.slides.length === 5, 'Carrossel gerou 5 slides estruturados');
   assert(carousel.slides[0].title.length > 0, 'Slide de capa possui título magnético');
 
-  // 10. Teste Obrigatório de Autocorreção (Self-Healing Loop)
-  console.log(`\n▶ Teste 10: Ciclo de Autocorreção Obrigatório (Self-Healing Loop)`);
+  // 10. Teste do Gerador de Imagens por IA (Estilo ChatGPT / DALL-E)
+  console.log(`\n▶ Teste 10: Gerador de Imagens por IA (Estilo ChatGPT / DALL-E)`);
+  const imageGen = await mediaService.generateImage({
+    prompt: 'Planeta cósmico Moura.ai cercado de anéis fluorescentes em 8k',
+    style: 'cosmic',
+    aspectRatio: '1:1'
+  });
+  assert(!!imageGen.imageUrl && (imageGen.imageUrl.startsWith('data:image/svg+xml;base64,') || imageGen.imageUrl.startsWith('http')), 'Imagem gerada como Data URL em alta resolução');
+  assert(imageGen.dimensions.width === 1024 && imageGen.dimensions.height === 1024, 'Dimensões quadradas 1024x1024 para proporção 1:1');
+  assert(imageGen.seed > 0, 'Seed aleatória gerada com sucesso');
+
+  // 11. Teste Obrigatório de Autocorreção (Self-Healing Loop)
+  console.log(`\n▶ Teste 11: Ciclo de Autocorreção Obrigatório (Self-Healing Loop)`);
   const malformedHtml = `<div class="container"><div class="card"><h1>Título</h1>`;
   const healingResult = selfHealing.runDiagnosticCycle(malformedHtml, 'html');
   assert(healingResult.initialStatus === 'error_detected', 'Detector identificou tag não fechada corretamente');
   assert(healingResult.retestStatus === 'passed', 'Auto-corretor aplicou o patch e re-teste foi aprovado');
   assert(!!healingResult.logId, 'Evento de autocorreção registrado na auditoria da plataforma');
 
-  // 11. Teste de Orquestração Multi-Agente
-  console.log(`\n▶ Teste 11: Orquestrador de Agentes Especializados`);
+  // 12. Teste de Orquestração Multi-Agente
+  console.log(`\n▶ Teste 12: Orquestrador de Agentes Especializados`);
   const orchestration = await orchestrator.orchestrate({
     objective: 'Desenvolver um bot de agendamento integrado ao WhatsApp',
     category: 'agents',
@@ -151,8 +162,8 @@ async function runTestSuite() {
   assert(orchestration.steps.length >= 4, 'Orquestrador executou os 4 agentes principais (Planejamento, Segurança, Automação, QA)');
   assert(orchestration.totalTimeMs >= 0, 'Duração da orquestração foi monitorada com precisão');
 
-  // 12. Teste de Integridade dos Workflows n8n
-  console.log(`\n▶ Teste 12: Validação dos Workflows n8n`);
+  // 13. Teste de Integridade dos Workflows n8n
+  console.log(`\n▶ Teste 13: Validação dos Workflows n8n`);
   const n8nDir = path.resolve(process.cwd(), 'automations_n8n');
   const expectedWorkflows = [
     'workflow_1_whatsapp_lead_qualification.json',
