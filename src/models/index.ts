@@ -95,7 +95,7 @@ export interface AuditLog {
   id: string;
   userId: string;
   action: string;
-  category: 'auth' | 'generation' | 'plan_change' | 'self_healing' | 'n8n_webhook' | 'admin' | 'profile';
+  category: 'auth' | 'generation' | 'plan_change' | 'self_healing' | 'n8n_webhook' | 'admin' | 'profile' | 'prompts';
   details: Record<string, any>;
   createdAt: string;
 }

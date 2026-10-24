@@ -9,6 +9,7 @@ import { mediaService } from '../services/media/index.js';
 import { orchestrator } from '../services/agents/index.js';
 import { selfHealing } from '../services/self_healing/index.js';
 import { llmService } from '../services/llm/index.js';
+import { promptEngineService } from '../services/prompts/index.js';
 
 export const apiRouter = Router();
 
@@ -389,7 +390,7 @@ apiRouter.post('/media/generate-image', authMiddleware, async (req: Authenticate
     return;
   }
 
-  const { prompt, style, aspectRatio } = req.body;
+  const { prompt, style, aspectRatio, creationMode } = req.body;
   if (!prompt) {
     res.status(400).json({ error: 'O prompt da imagem é obrigatório.' });
     return;
@@ -399,11 +400,12 @@ apiRouter.post('/media/generate-image', authMiddleware, async (req: Authenticate
     const image = await mediaService.generateImage({
       prompt,
       style: style || 'cosmic',
-      aspectRatio: aspectRatio || '1:1'
+      aspectRatio: aspectRatio || '1:1',
+      creationMode: creationMode ? Number(creationMode) : undefined
     });
 
     DB.incrementUsage(userId, 'images', 1500);
-    DB.logAudit(userId, 'ai_image_generated', 'generation', { prompt, style, aspectRatio });
+    DB.logAudit(userId, 'ai_image_generated', 'generation', { prompt, style, aspectRatio, creationMode });
 
     res.json({
       success: true,
@@ -473,7 +475,45 @@ apiRouter.post('/media/carousel', authMiddleware, (req: AuthenticatedRequest, re
 });
 
 // ==============================================================================
-// 7. ORQUESTRADOR MULTI-AGENTE & AUTOCORREÇÃO
+// 7. CENTRAL DE PROMPTS MESTRES (ALTA PERFORMANCE SFW/NSFW, 8 MÓDULOS & 15 MODOS)
+// ==============================================================================
+apiRouter.get('/prompts/master-engines', (req, res) => {
+  res.json({
+    engines: promptEngineService.listEngines()
+  });
+});
+
+apiRouter.post('/prompts/execute', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user!.id;
+  const { engineId, prompt, moduleId, modeId } = req.body;
+
+  if (!engineId || !prompt) {
+    res.status(400).json({ error: 'engineId e prompt são obrigatórios.' });
+    return;
+  }
+
+  try {
+    const output = await promptEngineService.executeEngine({
+      engineId,
+      prompt,
+      moduleId,
+      modeId: modeId ? Number(modeId) : undefined,
+      userId
+    });
+
+    DB.logAudit(userId, 'master_prompt_executed', 'prompts', { engineId, moduleId, modeId });
+
+    res.json({
+      success: true,
+      output
+    });
+  } catch (err: any) {
+    res.status(500).json({ error: 'Erro ao executar motor de prompt: ' + err.message });
+  }
+});
+
+// ==============================================================================
+// 8. ORQUESTRADOR MULTI-AGENTE & AUTOCORREÇÃO
 // ==============================================================================
 apiRouter.post('/agents/orchestrate', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;

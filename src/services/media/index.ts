@@ -14,7 +14,8 @@ export interface CarouselRequest {
 
 export interface GenerateImageRequest {
   prompt: string;
-  style?: 'cosmic' | 'photorealistic' | 'cyberpunk' | 'anime' | '3d_render';
+  style?: 'cosmic' | 'photorealistic' | 'cyberpunk' | 'anime' | '3d_render' | string;
+  creationMode?: number;
   aspectRatio?: '1:1' | '16:9' | '9:16';
 }
 
@@ -136,8 +137,27 @@ export class MediaStudioService {
     aspectRatio: string;
     seed: number;
     dimensions: { width: number; height: number };
+    creationMode?: number;
   }> {
-    const style = req.style || 'cosmic';
+    const creationModeNames: Record<number, string> = {
+      1: 'Fotografia Realista',
+      2: 'Arte Cinematográfica',
+      3: 'Anime e Mangá',
+      4: 'Ilustração Digital',
+      5: 'Design 3D',
+      6: 'Logotipos e Identidade Visual',
+      7: 'Publicidade e Marketing',
+      8: 'Imagens de Produtos',
+      9: 'Paisagens e Arquitetura',
+      10: 'Personagens e Criaturas',
+      11: 'Interfaces e Conceitos de Apps (UI/UX)',
+      12: 'Infográficos e Diagramas',
+      13: 'Capas, Pôsteres e Thumbnails',
+      14: 'Imagens para Redes Sociais',
+      15: 'Arte Conceitual e Mundos de Ficção'
+    };
+    const modeLabel = req.creationMode ? creationModeNames[req.creationMode] || '' : '';
+    const style = modeLabel ? `${req.style || 'cosmic'} — ${modeLabel}` : (req.style || 'cosmic');
     const aspectRatio = req.aspectRatio || '1:1';
     const seed = Math.floor(Math.random() * 9000000) + 1000000;
 

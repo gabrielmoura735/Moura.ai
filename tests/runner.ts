@@ -6,6 +6,7 @@ import { digitalBuilder } from '../src/services/builder/index.js';
 import { mediaService } from '../src/services/media/index.js';
 import { selfHealing } from '../src/services/self_healing/index.js';
 import { orchestrator } from '../src/services/agents/index.js';
+import { promptEngineService, MASTER_ENGINES } from '../src/services/prompts/index.js';
 
 let passedTests = 0;
 let failedTests = 0;
@@ -185,6 +186,47 @@ async function runTestSuite() {
     }
     assert(exists && validJson, `Workflow n8n '${wf}' é válido e importável`);
   }
+
+  // 14. Teste dos Motores Mestres de Prompt (Prompt Mestre Único, Assistente e Motor de Imagens)
+  console.log(`\n▶ Teste 14: Integridade dos 3 Prompts Mestres Oficiais`);
+  const engines = promptEngineService.listEngines();
+  assert(engines.length === 3, 'Exatamente 3 Motores Mestres oficiais registrados');
+  assert(!!MASTER_ENGINES.high_performance_omni, 'Motor 01 (IA de Alta Performance Omni SFW/NSFW) ativo');
+  assert(!!MASTER_ENGINES.creative_technical_assistant, 'Motor 02 (Assistente Criativo & Técnico Completo) ativo');
+  assert(!!MASTER_ENGINES.advanced_image_engine, 'Motor 03 (Motor Avançado de Geração de Imagens) ativo');
+
+  // 15. Teste dos 8 Módulos (A a H) e 15 Modos de Criação Nativos
+  console.log(`\n▶ Teste 15: Validação dos 8 Módulos (A a H) e 15 Modos de Criação`);
+  const assistantModules = MASTER_ENGINES.creative_technical_assistant.modules || [];
+  assert(assistantModules.length === 8, 'Motor 02 possui todos os 8 Módulos especializados (A a H)');
+  const moduleIds = assistantModules.map(m => m.id);
+  assert(['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].every(id => moduleIds.includes(id)), 'Todos os identificadores de módulo A-H estão presentes');
+
+  const imageModes = MASTER_ENGINES.advanced_image_engine.modes || [];
+  assert(imageModes.length === 15, 'Motor 03 possui os 15 Modos de Criação nativos');
+  assert(imageModes.some(m => m.name.includes('Fotografia Realista')), 'Modo 01 Fotografia Realista validado');
+  assert(imageModes.some(m => m.name.includes('Arte Conceitual')), 'Modo 15 Arte Conceitual validado');
+
+  // 16. Teste de Execução do Motor de Prompt com Injeção de Contexto
+  console.log(`\n▶ Teste 16: Execução de Prompts Mestres com Contexto e Moderação`);
+  const execOutput = await promptEngineService.executeEngine({
+    engineId: 'high_performance_omni',
+    prompt: 'Crie uma descrição impactante para um portal cósmico',
+    userId: admin!.id
+  });
+  assert(!!execOutput.result && execOutput.result.length > 20, 'Motor 01 executou com sucesso e retornou texto enriquecido');
+  assert(execOutput.engine.id === 'high_performance_omni', 'Metadados do motor retornados corretamente');
+
+  // 17. Teste de Integração do Motor de Imagens com Modos de Criação Nativos
+  console.log(`\n▶ Teste 17: Integração do Gerador de Imagens com os 15 Modos`);
+  const modeImage = await mediaService.generateImage({
+    prompt: 'Nave estelar explorando anéis de Saturno',
+    style: 'cosmic',
+    creationMode: 1,
+    aspectRatio: '16:9'
+  });
+  assert(modeImage.style.includes('Fotografia Realista'), 'Estilo da imagem reflete o Modo de Criação 01');
+  assert(modeImage.dimensions.width === 1280 && modeImage.dimensions.height === 720, 'Dimensões 16:9 respeitadas');
 
   // Resumo Final
   console.log(`\n================================================================`);
