@@ -23,7 +23,7 @@ const publicDir = path.resolve(process.cwd(), 'public');
 app.use(express.static(publicDir));
 
 // Fallback para SPA (qualquer rota desconhecida entrega o index.html)
-app.get('*', (req, res) => {
+app.use((req, res) => {
   const indexPath = path.join(publicDir, 'index.html');
   res.sendFile(indexPath);
 });
