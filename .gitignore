@@ -1,0 +1,32 @@
+# Node.js
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Database
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Legacy preserved files
+legacy_oracao_365/
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# System generated / Logs
+*.log
+.system_generated/
+__pycache__/
+*.pyc

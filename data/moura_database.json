@@ -1,0 +1,156 @@
+{
+  "users": [
+    {
+      "id": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Gabriel Moura (Admin)",
+      "email": "admin@moura.ai",
+      "passwordHash": "$2b$10$ihjp04NwD3dM0AvmNYETvu9x5FzntS4epeNxwFQ9q4VBDV9lmdk4u",
+      "role": "admin",
+      "planId": "galaxi",
+      "organizationId": "org_mouras_world",
+      "createdAt": "2026-10-24T01:14:17.615Z"
+    },
+    {
+      "id": "5eea6eca-b7bc-484a-a9aa-04e38ad2f891",
+      "name": "Empreendedor Pro Demo",
+      "email": "demo@moura.ai",
+      "passwordHash": "$2b$10$ihjp04NwD3dM0AvmNYETvuN6bULQfk82K6AkO55rFYbNZ/GiitH6K",
+      "role": "creator",
+      "planId": "pro",
+      "organizationId": "org_demo_lab",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    }
+  ],
+  "dailyUsage": [
+    {
+      "id": "58fa4ea9-4d31-4d4b-a9a0-2b45b13c6c9a",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "date": "2026-10-24",
+      "imagesCount": 0,
+      "sitesCount": 0,
+      "saasCount": 0,
+      "enterpriseCount": 0,
+      "videosCount": 0,
+      "researchCount": 0,
+      "agentsCount": 0,
+      "tokensUsed": 0
+    }
+  ],
+  "projects": [],
+  "agents": [
+    {
+      "id": "b45c8f75-a663-4dc1-bd17-04a0d5ac4a94",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Moura SDR — Vendas & WhatsApp",
+      "specialty": "vendas_sdr",
+      "systemPrompt": "Você é um especialista em conversão e vendas no WhatsApp. Aborda o cliente com empatia, descobre necessidades, contorna objeções com segurança e conduz ao fechamento com link direto.",
+      "tools": [
+        "wa_link_generator",
+        "faq_kb",
+        "checkout_bridge"
+      ],
+      "status": "active",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    },
+    {
+      "id": "68fe101b-7de1-4829-b511-8fbe8714d0fe",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Moura SAC — Suporte & Triagem",
+      "specialty": "atendimento_sac",
+      "systemPrompt": "Você é o agente de suporte inteligente. Resolve dúvidas instantaneamente, consulta pedidos e escalona chamados complexos para atendimento humano com resumo estruturado.",
+      "tools": [
+        "ticket_creator",
+        "order_status",
+        "sentiment_analyzer"
+      ],
+      "status": "active",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    },
+    {
+      "id": "630afc83-b95f-4cd1-b35b-c46e10f9eeea",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Moura Imóveis — Consultor Imobiliário",
+      "specialty": "imobiliario",
+      "systemPrompt": "Você é o consultor de imóveis de alta performance. Identifica localização, orçamento, número de quartos e agenda visitas no WhatsApp dos corretores.",
+      "tools": [
+        "property_catalog",
+        "schedule_calendar",
+        "lead_scorer"
+      ],
+      "status": "active",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    },
+    {
+      "id": "0411f86f-25b1-46c6-babf-b9371fdf0638",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Moura Dev — Engenheiro Full-Stack",
+      "specialty": "software_dev",
+      "systemPrompt": "Você é o arquiteto e desenvolvedor sênior. Escreve código limpo, cria Micro-SaaS, analisa erros, gera testes automatizados e executa patches de autocorreção.",
+      "tools": [
+        "code_sandbox",
+        "test_runner",
+        "git_automator"
+      ],
+      "status": "active",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    }
+  ],
+  "selfHealingLogs": [
+    {
+      "errorDetected": "Incompatibilidade de tags HTML: 2 aberturas vs 0 fechamentos de <div>.",
+      "rootCause": "Fechar as tags pendentes para garantir integridade do DOM.",
+      "patchApplied": "Correção automática aplicada em html.",
+      "testResult": "passed",
+      "status": "resolved",
+      "id": "67b60d49-3f97-4c4e-8921-f68cf59238de",
+      "createdAt": "2026-10-24T01:16:59.939Z"
+    },
+    {
+      "errorDetected": "Incompatibilidade de tags HTML: 2 aberturas vs 0 fechamentos de <div>.",
+      "rootCause": "Fechar as tags pendentes para garantir integridade do DOM.",
+      "patchApplied": "Correção automática aplicada em html.",
+      "testResult": "passed",
+      "status": "resolved",
+      "id": "6a6f287f-7bac-4f05-825e-4640341ba59e",
+      "createdAt": "2026-10-24T01:14:17.847Z"
+    }
+  ],
+  "auditLogs": [
+    {
+      "id": "49981afd-3dd8-476e-9d6e-99a9dd20d3f2",
+      "userId": "system",
+      "action": "self_healing_cycle_completed",
+      "category": "self_healing",
+      "details": {
+        "logId": "67b60d49-3f97-4c4e-8921-f68cf59238de",
+        "retestPassed": true,
+        "errorType": "syntax"
+      },
+      "createdAt": "2026-10-24T01:16:59.939Z"
+    },
+    {
+      "id": "ce8f03bd-d05c-4e3c-8e34-9cb6a65c4b6b",
+      "userId": "system",
+      "action": "self_healing_cycle_completed",
+      "category": "self_healing",
+      "details": {
+        "logId": "6a6f287f-7bac-4f05-825e-4640341ba59e",
+        "retestPassed": true,
+        "errorType": "syntax"
+      },
+      "createdAt": "2026-10-24T01:14:17.848Z"
+    }
+  ],
+  "n8nWebhooks": [
+    {
+      "id": "f74698ff-f9a6-41ca-bf33-933d2a8d5618",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Disparador de Leads WhatsApp para n8n",
+      "triggerEvent": "whatsapp_lead_received",
+      "targetUrl": "http://localhost:5678/webhook/moura-ai",
+      "secretToken": "moura_n8n_secure_token_key",
+      "status": "active",
+      "createdAt": "2026-10-24T01:14:17.762Z"
+    }
+  ]
+}

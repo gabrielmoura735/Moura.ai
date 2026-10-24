@@ -1,0 +1,26 @@
+name: Moura.ai Self-Healing Health Audit
+
+on:
+  schedule:
+    - cron: '0 6 * * *' # Executa todo dia às 06:00 UTC
+  workflow_dispatch: # Permite disparo manual com 1 clique
+
+jobs:
+  health_audit:
+    name: Self-Healing & Automation Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Instalar Dependências
+        run: npm install
+
+      - name: Validar Workflows n8n e Motor de Autocorreção
+        run: npm test

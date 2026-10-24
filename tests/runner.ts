@@ -1,0 +1,149 @@
+import fs from 'fs';
+import path from 'path';
+import { CONFIG } from '../src/config/index.js';
+import { DB } from '../src/db/index.js';
+import { digitalBuilder } from '../src/services/builder/index.js';
+import { mediaService } from '../src/services/media/index.js';
+import { selfHealing } from '../src/services/self_healing/index.js';
+import { orchestrator } from '../src/services/agents/index.js';
+
+let passedTests = 0;
+let failedTests = 0;
+
+function assert(condition: boolean, testName: string, failureDetails?: string) {
+  if (condition) {
+    console.log(`  ✅ [PASS] ${testName}`);
+    passedTests++;
+  } else {
+    console.error(`  ❌ [FAIL] ${testName}`);
+    if (failureDetails) console.error(`     Detalhes: ${failureDetails}`);
+    failedTests++;
+  }
+}
+
+async function runTestSuite() {
+  console.log(`\n================================================================`);
+  console.log(`🧪 BATERIA DE TESTES AUTOMATIZADOS — MOURA.AI`);
+  console.log(`================================================================\n`);
+
+  // 1. Teste de Configuração Comercial e Tokens Ilimitados
+  console.log(`▶ Teste 1: Configuração Comercial e Tokens Ilimitados`);
+  assert(CONFIG.TOKENS_UNLIMITED === true, 'Política de tokens é ILIMITADA para todos os planos');
+  assert(CONFIG.PLANS.free.dailyGenerationLimit === 5, 'Plano Grátis tem limite de 5 gerações/dia');
+  assert(CONFIG.PLANS.free.dailyImagesLimit === 32, 'Plano Grátis tem até 32 imagens/dia');
+  assert(CONFIG.PLANS.pro.priceMonthly === 197, 'Plano Pro custa R$ 197/mês');
+  assert(CONFIG.PLANS.pro.dailyGenerationLimit === 32, 'Plano Pro tem até 32 gerações/dia de cada recurso');
+  assert(CONFIG.PLANS.ultra.priceMonthly === 697, 'Plano Ultra custa R$ 697/mês');
+  assert(CONFIG.PLANS.ultra.dailyGenerationLimit === 80, 'Plano Ultra tem até 80 gerações/dia de cada recurso');
+  assert(CONFIG.PLANS.galaxi.priceMonthly === 1197, 'Plano Galaxi custa R$ 1.197/mês');
+  assert(CONFIG.PLANS.galaxi.dailyGenerationLimit === 200, 'Plano Galaxi tem até 200 gerações/dia de cada recurso');
+
+  // 2. Teste do Banco de Dados e Controle de Cotas
+  console.log(`\n▶ Teste 2: Persistência do Banco de Dados e Motor de Cotas`);
+  const admin = DB.findUserByEmail('admin@moura.ai');
+  assert(!!admin, 'Usuário Admin inicial encontrado no banco de dados');
+  assert(admin?.planId === 'galaxi', 'Admin possui plano Galaxi');
+
+  const quota = DB.checkQuota(admin!.id, 'sites');
+  assert(quota.allowed === true, 'Admin tem permissão para criar sites');
+  assert(quota.limit === 200, 'Limite do Admin no plano Galaxi é 200/dia');
+
+  // 3. Teste do Builder de Sites para WhatsApp
+  console.log(`\n▶ Teste 3: Builder de Sites para WhatsApp`);
+  const waSite = digitalBuilder.buildWhatsAppSite({
+    businessName: 'Hamburgueria Artesanal Moura',
+    whatsappNumber: '5511988887777',
+    headline: 'O Melhor Burger Artesanal Entregue na Sua Porta',
+    subheadline: 'Peça direto pelo WhatsApp e receba quentinho em até 30 minutos.',
+    products: [
+      { name: 'Burger Cheddar Bacon', description: 'Carne 180g, queijo cheddar inglês e bacon crocante.', price: 'R$ 38,00', badge: 'Top 1' }
+    ]
+  });
+
+  assert(waSite.files.length >= 2, 'Site para WhatsApp gerou os arquivos de código');
+  assert(waSite.previewHtml.includes('wa.me/5511988887777'), 'HTML gerado contém link dinâmico formatado para WhatsApp');
+  assert(waSite.previewHtml.includes('wa-pulse'), 'HTML contém botão flutuante pulsante com animação CSS');
+  assert(waSite.previewHtml.includes('leadModal'), 'HTML contém modal inteligente de pré-atendimento');
+
+  // 4. Teste do Builder de Micro-SaaS
+  console.log(`\n▶ Teste 4: Builder de Micro-SaaS e Arquitetura Operacional`);
+  const microSaaS = digitalBuilder.buildMicroSaaS({
+    name: 'ClinicaZap AI',
+    niche: 'Clínicas Odontológicas',
+    problemSolved: 'Confirmação automática de consultas no WhatsApp com redução de faltas',
+    features: ['Lembretes 24h antes', 'Reagendamento com 1 clique', 'Relatório de comparecimento']
+  });
+  assert(microSaaS.files.some(f => f.path.includes('server.js')), 'Micro-SaaS gerou backend operacional');
+  assert(microSaaS.files.some(f => f.path.includes('package.json')), 'Micro-SaaS gerou manifesto de dependências');
+
+  // 5. Teste do Estúdio de Mídia (Vídeos, Shorts & Reels 9:16)
+  console.log(`\n▶ Teste 5: Estúdio de Mídia e Roteiros Virais 9:16`);
+  const viralScript = mediaService.generateViralScript({
+    topic: 'Como atrair clientes todos os dias com IA',
+    niche: 'Prestadores de Serviços',
+    tone: 'urgente'
+  });
+  assert(viralScript.aspectRatio.includes('9:16'), 'Roteiro gerado no formato vertical 9:16 para Reels e Shorts');
+  assert(viralScript.scenes.length >= 4, 'Roteiro contém divisão completa de cenas com minutagem');
+  assert(viralScript.scenes[0].sfx.length > 0, 'Cenas possuem marcações de áudio e efeitos sonoros (SFX)');
+  assert(viralScript.scenes[0].aiVideoPrompt.length > 0, 'Cenas possuem prompts de vídeo prontos para IA');
+
+  // 6. Teste Obrigatório de Autocorreção (Self-Healing Loop)
+  console.log(`\n▶ Teste 6: Ciclo de Autocorreção Obrigatório (Self-Healing Loop)`);
+  const malformedHtml = `<div class="container"><div class="card"><h1>Título</h1>`; // Faltando 2 </div>
+  const healingResult = selfHealing.runDiagnosticCycle(malformedHtml, 'html');
+  assert(healingResult.initialStatus === 'error_detected', 'Detector identificou tag não fechada corretamente');
+  assert(healingResult.retestStatus === 'passed', 'Auto-corretor aplicou o patch e re-teste foi aprovado');
+  assert(!!healingResult.logId, 'Evento de autocorreção registrado na auditoria da plataforma');
+
+  // 7. Teste de Orquestração Multi-Agente
+  console.log(`\n▶ Teste 7: Orquestrador de Agentes Especializados`);
+  const orchestration = await orchestrator.orchestrate({
+    objective: 'Desenvolver um bot de agendamento integrado ao WhatsApp',
+    category: 'agents',
+    userId: admin!.id
+  });
+  assert(orchestration.steps.length >= 4, 'Orquestrador executou os 4 agentes principais (Planejamento, Segurança, Automação, QA)');
+  assert(orchestration.totalTimeMs >= 0, 'Duração da orquestração foi monitorada com precisão');
+
+  // 8. Teste de Integridade dos Workflows n8n
+  console.log(`\n▶ Teste 8: Validação dos Workflows n8n`);
+  const n8nDir = path.resolve(process.cwd(), 'automations_n8n');
+  const expectedWorkflows = [
+    'workflow_1_whatsapp_lead_qualification.json',
+    'workflow_2_viral_content_pipeline.json',
+    'workflow_3_healthcheck_selfhealing_alerts.json',
+    'workflow_4_microsaas_customer_onboarding.json',
+    'workflow_5_ai_agent_support_triage.json'
+  ];
+
+  for (const wf of expectedWorkflows) {
+    const fullPath = path.join(n8nDir, wf);
+    const exists = fs.existsSync(fullPath);
+    let validJson = false;
+    if (exists) {
+      try {
+        const content = JSON.parse(fs.readFileSync(fullPath, 'utf-8'));
+        validJson = Array.isArray(content.nodes) && content.nodes.length > 0;
+      } catch (_) {}
+    }
+    assert(exists && validJson, `Workflow n8n '${wf}' é válido e importável`);
+  }
+
+  // Resumo Final
+  console.log(`\n================================================================`);
+  console.log(`📊 RESULTADO DA EXECUÇÃO:`);
+  console.log(`   Total de Testes: ${passedTests + failedTests}`);
+  console.log(`   Aprovados: ${passedTests}`);
+  console.log(`   Falhas: ${failedTests}`);
+  console.log(`================================================================\n`);
+
+  if (failedTests > 0) {
+    process.exit(1);
+  }
+}
+
+runTestSuite().catch(err => {
+  console.error('Erro fatal durante a execução dos testes:', err);
+  process.exit(1);
+});

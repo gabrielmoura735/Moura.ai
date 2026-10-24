@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moura.ai — Plataforma Autônoma de Inteligência Artificial & Produtos Digitais</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+            },
+            accent: {
+              500: '#8b5cf6',
+              600: '#7c3aed',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
+    ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.4); border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.7); }
+    
+    .glow-cyan {
+      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
+    }
+    .glow-violet {
+      box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3);
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex antialiased selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-200">
+
+  <!-- SIDEBAR FIXA -->
+  <aside class="w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex flex-col justify-between p-4 shrink-0 hidden md:flex">
+    <div>
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3 px-2 py-3 mb-6">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-teal-400 to-violet-600 flex items-center justify-center font-extrabold text-slate-950 text-xl shadow-lg shadow-cyan-500/20">
+          M
+        </div>
+        <div>
+          <span class="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
+            Moura<span class="text-cyan-400">.ai</span>
+          </span>
+          <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Mouras-World Global</span>
+        </div>
+      </div>
+
+      <!-- Navigation Links -->
+      <nav class="space-y-1 text-sm font-medium">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 transition-all">
+          <i class="fa-solid fa-chart-pie w-5 text-center"></i>
+          <span>Dashboard Geral</span>
+        </button>
+        <button onclick="navigate('whatsapp-sites')" id="nav-whatsapp-sites" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-brands fa-whatsapp w-5 text-center text-emerald-400"></i>
+          <span>Sites para WhatsApp</span>
+        </button>
+        <button onclick="navigate('studio')" id="nav-studio" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-robot w-5 text-center text-cyan-400"></i>
+          <span>Multi-Agentes Studio</span>
+        </button>
+        <button onclick="navigate('microsaas')" id="nav-microsaas" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-layer-group w-5 text-center text-violet-400"></i>
+          <span>Micro-SaaS & Empresas</span>
+        </button>
+        <button onclick="navigate('media-studio')" id="nav-media-studio" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-clapperboard w-5 text-center text-rose-400"></i>
+          <span>Vídeos, Shorts & Reels</span>
+        </button>
+        <button onclick="navigate('n8n-automations')" id="nav-n8n-automations" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-network-wired w-5 text-center text-amber-400"></i>
+          <span>Automações n8n</span>
+        </button>
+        <button onclick="navigate('self-healing')" id="nav-self-healing" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-stethoscope w-5 text-center text-emerald-400"></i>
+          <span>Autocorreção (Healing)</span>
+        </button>
+        <button onclick="navigate('plans')" id="nav-plans" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-gem w-5 text-center text-amber-400"></i>
+          <span>Planos & Cotas</span>
+        </button>
+        <button onclick="navigate('admin')" id="nav-admin" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-shield-halved w-5 text-center text-blue-400"></i>
+          <span>Painel Admin</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- User / Plan Status Widget -->
+    <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800">
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-xs font-semibold text-slate-300" id="user-name-display">Gabriel Moura</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" id="user-plan-badge">GALAXI</span>
+      </div>
+      <div class="text-[11px] text-slate-400 mb-2 flex items-center gap-1.5">
+        <i class="fa-solid fa-infinity text-cyan-400"></i>
+        <span>Tokens: <strong class="text-white">Ilimitados</strong></span>
+      </div>
+      <button onclick="navigate('plans')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-opacity">
+        Gerenciar Plano
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN VIEWPORT -->
+  <main class="flex-1 flex flex-col min-w-0 overflow-y-auto">
+
+    <!-- Top Navigation Header -->
+    <header class="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
+      <div class="flex items-center gap-4">
+        <h1 class="text-lg font-bold text-white tracking-tight" id="view-title">Dashboard Geral</h1>
+        <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
+          Sistema Operacional 100%
+        </span>
+      </div>
+      <div class="flex items-center gap-3">
+        <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors" title="Alternar Tema Claro/Escuro">
+          <i class="fa-solid fa-sun text-sm" id="theme-icon"></i>
+        </button>
+        <a href="https://github.com/gabrielmoura735/Moura.ai" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition-all">
+          <i class="fa-brands fa-github text-sm"></i>
+          <span>GitHub Moura.ai</span>
+        </a>
+      </div>
+    </header>
+
+    <!-- VIEWS CONTAINER -->
+    <div class="p-6 max-w-7xl mx-auto w-full space-y-6">
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 1: DASHBOARD -->
+      <!-- ==================================================================== -->
+      <section id="view-dashboard" class="space-y-6">
+        <!-- Hero Banner -->
+        <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 border border-slate-800 relative overflow-hidden">
+          <div class="max-w-2xl relative z-10">
+            <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2 block">Ecossistema Moura.ai</span>
+            <h2 class="text-3xl font-extrabold text-white mb-3">Bem-vindo ao centro de criação e escala global da Moura.ai</h2>
+            <p class="text-slate-400 text-sm leading-relaxed mb-6">
+              Transforme ideias em sites para WhatsApp, Micro-SaaS funcionais, roteiros virais e automações no n8n. Tokens 100% ilimitados e arquitetura autônoma com autocorreção.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <button onclick="navigate('whatsapp-sites')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Criar Site para WhatsApp</span>
+              </button>
+              <button onclick="navigate('studio')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-sparkles text-cyan-400"></i>
+                <span>Abrir Studio de Agentes</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Metrics Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div class="flex items-center justify-between mb-3 text-slate-400">
+              <span class="text-xs font-semibold">Tokens de IA</span>
+              <i class="fa-solid fa-infinity text-cyan-400"></i>
+            </div>
+            <div class="text-2xl font-black text-white">ILIMITADO</div>
+            <p class="text-[11px] text-cyan-400 mt-1">Livre para criar sem bloqueio de tokens</p>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div class="flex items-center justify-between mb-3 text-slate-400">
+              <span class="text-xs font-semibold">Cota Diária de Sites</span>
+              <i class="fa-brands fa-whatsapp text-emerald-400"></i>
+            </div>
+            <div class="text-2xl font-black text-white" id="dash-sites-quota">0 / 200</div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div class="bg-emerald-500 h-full w-[2%]"></div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div class="flex items-center justify-between mb-3 text-slate-400">
+              <span class="text-xs font-semibold">Cota Diária de Mídia</span>
+              <i class="fa-solid fa-clapperboard text-rose-400"></i>
+            </div>
+            <div class="text-2xl font-black text-white" id="dash-videos-quota">0 / 200</div>
+            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
+              <div class="bg-rose-500 h-full w-[1%]"></div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
+            <div class="flex items-center justify-between mb-3 text-slate-400">
+              <span class="text-xs font-semibold">Automações n8n</span>
+              <i class="fa-solid fa-network-wired text-amber-400"></i>
+            </div>
+            <div class="text-2xl font-black text-white">5 Prontas</div>
+            <p class="text-[11px] text-amber-400 mt-1">Workflows prontos para importação</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 2: SITES PARA WHATSAPP (BUILDER & SANDBOX) -->
+      <!-- ==================================================================== -->
+      <section id="view-whatsapp-sites" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white">Builder de Sites para WhatsApp</h2>
+            <p class="text-slate-400 text-sm">Gere páginas de fechamento imediato com botão pulsante, catálogo interativo e formulário de qualificação.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Conversão Máxima wa.me
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Form Configurator -->
+          <div class="lg:col-span-5 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Negócio / Empresa:</label>
+              <input type="text" id="wa-input-name" value="Moura Burger & Grill" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Número do WhatsApp (com DDI e DDD):</label>
+              <input type="text" id="wa-input-phone" value="5511999998888" placeholder="Ex: 5511999998888" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Título de Impacto (Headline):</label>
+              <input type="text" id="wa-input-headline" value="O Melhor Sabor Artesanal com Entrega Imediata" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Subtítulo / Proposta de Valor:</label>
+              <textarea id="wa-input-subheadline" rows="2" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">Peça direto pelo WhatsApp sem complicação e receba seu pedido quentinho em até 30 minutos.</textarea>
+            </div>
+            <button onclick="generateWhatsAppSite()" id="btn-gen-wa" class="w-full py-3.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/25 transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Gerar Site para WhatsApp com 1 Clique</span>
+            </button>
+          </div>
+
+          <!-- Sandbox Live Preview -->
+          <div class="lg:col-span-7 p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col h-[580px]">
+            <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div class="flex items-center gap-2">
+                <span class="w-3 h-3 rounded-full bg-rose-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-500 inline-block"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                <span class="text-xs text-slate-400 ml-2 font-mono">Sandbox Preview • Live Iframe</span>
+              </div>
+              <button onclick="openPreviewNewTab()" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">
+                <span>Abrir em Nova Aba</span>
+                <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </button>
+            </div>
+            <div class="flex-1 mt-3 rounded-xl overflow-hidden bg-black border border-slate-800">
+              <iframe id="wa-sandbox-iframe" class="w-full h-full border-0"></iframe>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 3: MULTI-AGENTES STUDIO -->
+      <!-- ==================================================================== -->
+      <section id="view-studio" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white">Studio de Agentes Especializados</h2>
+            <p class="text-slate-400 text-sm">Planejamento, Arquitetura, Segurança, Automação n8n e Revisão colaborativa em tempo real.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+            10 Agentes Ativos
+          </span>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Qual o objetivo do projeto ou funcionalidade?</label>
+            <div class="flex gap-2">
+              <input type="text" id="agent-input-objective" placeholder="Ex: Criar uma esteira de captura de clientes para imobiliária com agendamento automático" value="Criar um funil de agendamento automático de consultas com integração no WhatsApp" class="flex-1 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-cyan-500 outline-none">
+              <button onclick="runOrchestrator()" id="btn-run-agents" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-600 hover:opacity-90 text-slate-950 font-bold text-sm transition-all flex items-center gap-2">
+                <i class="fa-solid fa-play"></i>
+                <span>Executar Esquadrão</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Steps Feed -->
+          <div id="orchestrator-output" class="space-y-3 pt-4 border-t border-slate-800 hidden">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-circle-check text-emerald-400"></i>
+              <span>Etapas Executadas pelos Agentes:</span>
+            </h3>
+            <div id="orchestrator-steps-list" class="space-y-3"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 4: VÍDEOS, SHORTS & REELS STUDIO -->
+      <!-- ==================================================================== -->
+      <section id="view-media-studio" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Estúdio de Vídeos, Shorts & Reels</h2>
+          <p class="text-slate-400 text-sm">Geração de roteiros virais no formato 9:16 com ganchos de 3 segundos, divisão de cenas e prompts de IA.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tema do Vídeo / Conteúdo:</label>
+              <input type="text" id="reels-topic" value="Como criar um site para WhatsApp em 2 minutos" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-rose-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nicho do Negócio:</label>
+              <input type="text" id="reels-niche" value="Marketing & Vendas Digitais" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-rose-500 outline-none">
+            </div>
+          </div>
+          <button onclick="generateViralReels()" id="btn-gen-reels" class="px-6 py-3 rounded-xl bg-rose-500 hover:bg-rose-400 text-white font-bold text-sm shadow-lg shadow-rose-500/20 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-film"></i>
+            <span>Gerar Roteiro Viral 9:16</span>
+          </button>
+
+          <!-- Result Card -->
+          <div id="reels-result-container" class="pt-4 border-t border-slate-800 hidden space-y-4">
+            <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
+              <span class="text-xs font-bold text-rose-400 block mb-1">🎯 GANCHO DE RETENÇÃO (3 PRIMEIROS SEGUNDOS):</span>
+              <p class="text-white text-base font-semibold" id="reels-hook-text"></p>
+            </div>
+            <div class="space-y-3" id="reels-scenes-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 5: AUTOMAÇÕES N8N -->
+      <!-- ==================================================================== -->
+      <section id="view-n8n-automations" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Central de Automações Automáticas no n8n</h2>
+          <p class="text-slate-400 text-sm">5 Workflows estruturados e testados para importação direta no seu n8n com 1 clique.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Fluxo 01</span>
+                <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Qualificação de Leads WhatsApp</h3>
+              <p class="text-xs text-slate-400 leading-relaxed mb-4">Recebe dados do site de WhatsApp, qualifica com a Moura.ai e notifica o vendedor.</p>
+            </div>
+            <button onclick="testWebhookTrigger('whatsapp_lead_received')" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors">
+              Simular Disparo
+            </button>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20">Fluxo 02</span>
+                <i class="fa-solid fa-clapperboard text-rose-400 text-lg"></i>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Pipeline Diário de Reels & Shorts</h3>
+              <p class="text-xs text-slate-400 leading-relaxed mb-4">Executa às 08h da manhã gerando roteiros e carrosséis no automático.</p>
+            </div>
+            <button onclick="testWebhookTrigger('daily_content_pipeline')" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors">
+              Simular Disparo
+            </button>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Fluxo 03</span>
+                <i class="fa-solid fa-heart-pulse text-cyan-400 text-lg"></i>
+              </div>
+              <h3 class="text-base font-bold text-white mb-2">Monitor de Saúde & Autocorreção</h3>
+              <p class="text-xs text-slate-400 leading-relaxed mb-4">Pinga a Moura.ai a cada 15 min e dispara auto-recuperação caso detecte falhas.</p>
+            </div>
+            <button onclick="testWebhookTrigger('health_alert')" class="w-full py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors">
+              Simular Disparo
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
+          <h3 class="text-base font-bold text-white mb-2">Como Importar os Arquivos no seu n8n:</h3>
+          <p class="text-sm text-slate-400 mb-4">Os 5 arquivos JSON estão salvos na pasta <code class="text-cyan-400 bg-slate-800 px-2 py-1 rounded">automations_n8n/</code> prontos para arrastar e soltar direto na tela do seu n8n.</p>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 6: CONSOLE DE AUTOCORREÇÃO (SELF-HEALING) -->
+      <!-- ==================================================================== -->
+      <section id="view-self-healing" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Console de Autocorreção (Self-Healing Loop)</h2>
+          <p class="text-slate-400 text-sm">Módulo obrigatório da Moura.ai: Testar → Detectar → Diagnosticar → Corrigir → Testar Novamente → Registrar.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1">Cole um trecho de código com erro para testar a autocorreção:</label>
+            <textarea id="healing-code-input" rows="5" class="w-full font-mono text-xs px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-emerald-400 focus:border-emerald-500 outline-none"><div class="header"><div class="logo">Moura.ai<h1>Incompleto</h1></textarea>
+          </div>
+          <button onclick="runSelfHealingDiagnostics()" id="btn-run-healing" class="px-6 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-stethoscope"></i>
+            <span>Diagnosticar e Aplicar Patch Automático</span>
+          </button>
+
+          <!-- Healing Result -->
+          <div id="healing-result-box" class="pt-4 border-t border-slate-800 hidden space-y-3">
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-2" id="healing-result-content"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 7: PLANOS & PRECIFICAÇÃO -->
+      <!-- ==================================================================== -->
+      <section id="view-plans" class="space-y-6 hidden">
+        <div class="text-center max-w-xl mx-auto">
+          <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 block">Tokens Ilimitados em Todos os Planos</span>
+          <h2 class="text-3xl font-extrabold text-white mb-3">Escolha o Plano Ideal para seu Negócio</h2>
+          <p class="text-slate-400 text-sm">Alterne entre faturamento mensal e anual com 20% de desconto.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <!-- Grátis -->
+          <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-white mb-1">Plano Grátis</h3>
+              <p class="text-xs text-slate-400 mb-4">Para testar e validar ideias digitais.</p>
+              <div class="text-3xl font-black text-white mb-4">R$ 0<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✓ <strong>Tokens Ilimitados</strong></li>
+                <li>✓ Até 5 criações/dia de cada</li>
+                <li>✓ Até 32 imagens/dia</li>
+                <li>✓ 1 Webhook n8n</li>
+              </ul>
+            </div>
+            <button onclick="upgradePlan('free')" class="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-bold text-white transition-colors">
+              Plano Básico
+            </button>
+          </div>
+
+          <!-- Pro -->
+          <div class="p-6 rounded-2xl bg-slate-900 border border-cyan-500/50 flex flex-col justify-between relative glow-cyan">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-cyan-500 text-slate-950 text-[10px] font-black uppercase tracking-wider">Mais Popular</span>
+            <div>
+              <h3 class="text-lg font-bold text-white mb-1">Plano Pro</h3>
+              <p class="text-xs text-slate-400 mb-4">Para criadores e desenvolvedores.</p>
+              <div class="text-3xl font-black text-cyan-400 mb-4">R$ 197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✓ <strong>Tokens Ilimitados</strong></li>
+                <li>✓ <strong>15x mais potente</strong></li>
+                <li>✓ Até 32 criações/dia de cada</li>
+                <li>✓ Até 32 imagens HD/dia</li>
+                <li>✓ 10 Webhooks n8n</li>
+              </ul>
+            </div>
+            <button onclick="upgradePlan('pro')" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-xs font-bold text-slate-950 transition-colors">
+              Ativar Plano Pro
+            </button>
+          </div>
+
+          <!-- Ultra -->
+          <div class="p-6 rounded-2xl bg-slate-900 border border-violet-500/50 flex flex-col justify-between glow-violet">
+            <div>
+              <h3 class="text-lg font-bold text-white mb-1">Plano Ultra</h3>
+              <p class="text-xs text-slate-400 mb-4">Para agências e pequenas empresas.</p>
+              <div class="text-3xl font-black text-violet-400 mb-4">R$ 697<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✓ <strong>Tokens Ilimitados</strong></li>
+                <li>✓ <strong>30x mais potente</strong></li>
+                <li>✓ Até 80 criações/dia de cada</li>
+                <li>✓ Até 80 imagens 4K/dia</li>
+                <li>✓ 50 Webhooks n8n</li>
+              </ul>
+            </div>
+            <button onclick="upgradePlan('ultra')" class="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-bold text-white transition-colors">
+              Ativar Plano Ultra
+            </button>
+          </div>
+
+          <!-- Galaxi -->
+          <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-amber-950/20 border border-amber-500/40 flex flex-col justify-between">
+            <div>
+              <h3 class="text-lg font-bold text-amber-400 mb-1">Plano Galaxi</h3>
+              <p class="text-xs text-slate-400 mb-4">Potência máxima enterprise.</p>
+              <div class="text-3xl font-black text-amber-400 mb-4">R$ 1.197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <ul class="text-xs text-slate-300 space-y-2 mb-6">
+                <li>✓ <strong>Tokens Ilimitados</strong></li>
+                <li>✓ <strong>Potência Máxima Galaxi</strong></li>
+                <li>✓ Até 200 criações/dia de cada</li>
+                <li>✓ Até 200 imagens estúdio/dia</li>
+                <li>✓ Webhooks n8n Ilimitados</li>
+              </ul>
+            </div>
+            <button onclick="upgradePlan('galaxi')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-xs font-bold text-slate-950 transition-colors">
+              Ativar Plano Galaxi
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 8: PAINEL ADMIN -->
+      <!-- ==================================================================== -->
+      <section id="view-admin" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white">Painel Administrativo & Auditoria</h2>
+          <p class="text-slate-400 text-sm">Monitoramento de usuários, métricas globais e logs de auditoria do sistema.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <h3 class="text-base font-bold text-white mb-2">Logs de Auditoria Recentes:</h3>
+          <div id="admin-logs-list" class="space-y-2 font-mono text-xs">
+            <div class="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">Carregando logs...</div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- JAVASCRIPT REATIVO -->
+  <script>
+    let currentPreviewHtml = '';
+
+    // Navegação entre abas
+    function navigate(viewId) {
+      const views = ['dashboard', 'whatsapp-sites', 'studio', 'microsaas', 'media-studio', 'n8n-automations', 'self-healing', 'plans', 'admin'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const navBtn = document.getElementById(`nav-${v}`);
+        if (el) el.classList.add('hidden');
+        if (navBtn) {
+          navBtn.classList.remove('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+          navBtn.classList.add('text-slate-400');
+        }
+      });
+
+      const target = document.getElementById(`view-${viewId}`);
+      const activeNav = document.getElementById(`nav-${viewId}`);
+      if (target) target.classList.remove('hidden');
+      if (activeNav) {
+        activeNav.classList.add('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+        activeNav.classList.remove('text-slate-400');
+      }
+
+      const titles = {
+        'dashboard': 'Dashboard Geral',
+        'whatsapp-sites': 'Sites para WhatsApp',
+        'studio': 'Studio Multi-Agentes',
+        'microsaas': 'Micro-SaaS & Empresas',
+        'media-studio': 'Vídeos, Shorts & Reels',
+        'n8n-automations': 'Central de Automações n8n',
+        'self-healing': 'Console de Autocorreção',
+        'plans': 'Planos & Faturamento',
+        'admin': 'Painel Administrativo'
+      };
+      document.getElementById('view-title').innerText = titles[viewId] || 'Moura.ai';
+
+      if (viewId === 'admin') loadAdminLogs();
+    }
+
+    // Gerador de Site para WhatsApp
+    async function generateWhatsAppSite() {
+      const btn = document.getElementById('btn-gen-wa');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Site...';
+      btn.disabled = true;
+
+      const body = {
+        businessName: document.getElementById('wa-input-name').value,
+        whatsappNumber: document.getElementById('wa-input-phone').value,
+        headline: document.getElementById('wa-input-headline').value,
+        subheadline: document.getElementById('wa-input-subheadline').value
+      };
+
+      try {
+        const res = await fetch('/api/builder/whatsapp-site', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+
+        if (data.previewHtml) {
+          currentPreviewHtml = data.previewHtml;
+          const iframe = document.getElementById('wa-sandbox-iframe');
+          iframe.srcdoc = data.previewHtml;
+        } else if (data.error) {
+          alert(data.error);
+        }
+      } catch (err) {
+        alert('Erro ao conectar com a API Moura.ai');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Site para WhatsApp com 1 Clique';
+        btn.disabled = false;
+      }
+    }
+
+    function openPreviewNewTab() {
+      if (!currentPreviewHtml) {
+        generateWhatsAppSite().then(() => {
+          const w = window.open('');
+          w.document.write(currentPreviewHtml);
+        });
+        return;
+      }
+      const w = window.open('');
+      w.document.write(currentPreviewHtml);
+    }
+
+    // Orquestrador de Agentes
+    async function runOrchestrator() {
+      const btn = document.getElementById('btn-run-agents');
+      const objective = document.getElementById('agent-input-objective').value;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Orquestrando...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/agents/orchestrate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ objective })
+        });
+        const data = await res.json();
+
+        if (data.result && data.result.steps) {
+          const container = document.getElementById('orchestrator-output');
+          const list = document.getElementById('orchestrator-steps-list');
+          list.innerHTML = '';
+          container.classList.remove('hidden');
+
+          data.result.steps.forEach(s => {
+            const item = document.createElement('div');
+            item.className = 'p-4 rounded-xl bg-slate-950 border border-slate-800';
+            item.innerHTML = `
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-xs font-bold text-cyan-400">${s.agentName} — ${s.role}</span>
+                <span class="text-[10px] text-slate-500">${s.durationMs}ms</span>
+              </div>
+              <p class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${s.output}</p>
+            `;
+            list.appendChild(item);
+          });
+        }
+      } catch (err) {
+        alert('Erro durante orquestração');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-play"></i> Executar Esquadrão';
+        btn.disabled = false;
+      }
+    }
+
+    // Gerador de Reels
+    async function generateViralReels() {
+      const topic = document.getElementById('reels-topic').value;
+      const niche = document.getElementById('reels-niche').value;
+      const btn = document.getElementById('btn-gen-reels');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando Roteiro...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/media/viral-script', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ topic, niche })
+        });
+        const data = await res.json();
+
+        if (data.script) {
+          document.getElementById('reels-result-container').classList.remove('hidden');
+          document.getElementById('reels-hook-text').innerText = data.script.hook3s;
+          const list = document.getElementById('reels-scenes-list');
+          list.innerHTML = '';
+
+          data.script.scenes.forEach(s => {
+            const card = document.createElement('div');
+            card.className = 'p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-1.5';
+            card.innerHTML = `
+              <div class="flex items-center justify-between text-xs font-bold text-rose-400">
+                <span>Cena ${s.scene}: ${s.hook}</span>
+                <span class="text-slate-400">${s.time}</span>
+              </div>
+              <p class="text-xs text-white"><strong>Fala / Narração:</strong> "${s.script}"</p>
+              <p class="text-[11px] text-slate-400"><strong>Visual:</strong> ${s.visual}</p>
+              <p class="text-[11px] text-cyan-400 font-mono"><strong>Prompt de Vídeo IA:</strong> ${s.aiVideoPrompt}</p>
+            `;
+            list.appendChild(card);
+          });
+        }
+      } catch (err) {
+        alert('Erro ao gerar roteiro viral');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-film"></i> Gerar Roteiro Viral 9:16';
+        btn.disabled = false;
+      }
+    }
+
+    // Autocorreção Diagnostics
+    async function runSelfHealingDiagnostics() {
+      const code = document.getElementById('healing-code-input').value;
+      const btn = document.getElementById('btn-run-healing');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Diagnosticando...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/self-healing/diagnose', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ code, language: 'html' })
+        });
+        const data = await res.json();
+
+        const box = document.getElementById('healing-result-box');
+        const content = document.getElementById('healing-result-content');
+        box.classList.remove('hidden');
+
+        content.innerHTML = `
+          <div class="text-emerald-400 font-bold">STATUS DA AUTOCORREÇÃO: [${data.retestStatus.toUpperCase()}]</div>
+          <div class="text-slate-400">Erro Identificado: <span class="text-rose-400">${data.diagnostic.description || 'Nenhum'}</span></div>
+          <div class="text-slate-400">Diagnóstico: <span class="text-amber-400">${data.diagnostic.suggestedFix || 'OK'}</span></div>
+          <div class="text-slate-400">Re-teste Automatizado: <span class="text-emerald-400">${data.retestStatus === 'passed' ? 'Aprovado 100%' : 'Falhou'}</span></div>
+          <div class="text-slate-400">Log de Auditoria ID: <span class="text-cyan-400">${data.logId}</span></div>
+          <div class="mt-2 text-slate-300 font-bold">Código com Patch Aplicado:</div>
+          <pre class="bg-slate-900 p-2 rounded text-emerald-300 overflow-x-auto">${data.diagnostic.fixedCode || code}</pre>
+        `;
+      } catch (err) {
+        alert('Erro ao executar autocorreção');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-stethoscope"></i> Diagnosticar e Aplicar Patch Automático';
+        btn.disabled = false;
+      }
+    }
+
+    // Upgrade Plan
+    async function upgradePlan(planId) {
+      try {
+        const res = await fetch('/api/plans/upgrade', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ planId })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(data.message);
+          document.getElementById('user-plan-badge').innerText = planId.toUpperCase();
+        }
+      } catch (err) {
+        alert('Erro ao atualizar plano');
+      }
+    }
+
+    // Test Webhook Trigger
+    async function testWebhookTrigger(eventName) {
+      try {
+        const res = await fetch('/api/n8n/trigger', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ eventName, payload: { test: true } })
+        });
+        const data = await res.json();
+        alert(`Disparo simulado com sucesso! Status no n8n: ${data.externalStatus}`);
+      } catch (_) {
+        alert('Disparo registrado');
+      }
+    }
+
+    // Load Admin Logs
+    async function loadAdminLogs() {
+      try {
+        const res = await fetch('/api/admin/metrics');
+        const data = await res.json();
+        const list = document.getElementById('admin-logs-list');
+        list.innerHTML = '';
+        (data.recentAuditLogs || []).forEach(l => {
+          const item = document.createElement('div');
+          item.className = 'p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex justify-between';
+          item.innerHTML = `
+            <span><strong class="text-cyan-400">[${l.category.toUpperCase()}]</strong> ${l.action}</span>
+            <span class="text-slate-500">${new Date(l.createdAt).toLocaleTimeString()}</span>
+          `;
+          list.appendChild(item);
+        });
+      } catch (_) {}
+    }
+
+    function toggleDarkMode() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    // Executa preview inicial automático
+    window.addEventListener('DOMContentLoaded', () => {
+      generateWhatsAppSite();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+{
+  "name": "Moura.ai — 02. Pipeline Diário de Reels, Shorts & Carrosséis",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 8 * * *"
+            }
+          ]
+        }
+      },
+      "id": "cron-daily",
+      "name": "Agendamento Diário (08:00)",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/media/viral-script",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"topic\": \"Como usar IA e WhatsApp para faturar 10k por mês em 2026\",\n  \"niche\": \"Marketing Digital & Vendas\",\n  \"tone\": \"urgente\"\n}",
+        "options": {}
+      },
+      "id": "generate-reels-script",
+      "name": "Moura.ai: Gerar Roteiro Reels 9:16",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/media/carousel",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"title\": \"5 Erros Críticos que Bloqueiam Vendas no WhatsApp\",\n  \"niche\": \"Vendas e Automação\"\n}",
+        "options": {}
+      },
+      "id": "generate-carousel",
+      "name": "Moura.ai: Gerar Carrossel Visual",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "publish-social",
+      "name": "Enviar para Aprovação / Social Media",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [880, 300]
+    }
+  ],
+  "connections": {
+    "Agendamento Diário (08:00)": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Gerar Roteiro Reels 9:16",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Gerar Roteiro Reels 9:16": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Gerar Carrossel Visual",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Gerar Carrossel Visual": {
+      "main": [
+        [
+          {
+            "node": "Enviar para Aprovação / Social Media",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

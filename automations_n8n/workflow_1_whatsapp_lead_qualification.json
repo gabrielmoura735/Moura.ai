@@ -1,0 +1,91 @@
+{
+  "name": "Moura.ai — 01. Qualificação Autônoma de Leads no WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "moura-whatsapp-lead",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook: Lead Recebido do Site WhatsApp",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "webhookId": "moura-whatsapp-lead"
+    },
+    {
+      "parameters": {
+        "jsCode": "const item = $json.body || $json;\nreturn {\n  nome: item.name || 'Cliente Interessado',\n  telefone: (item.phone || '').replace(/\\D/g, ''),\n  interesse: item.interest || 'Geral',\n  timestamp: new Date().toISOString()\n};"
+      },
+      "id": "format-lead",
+      "name": "Formatar Dados do Lead",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/agents/orchestrate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"objective\": \"Qualificar lead para fechamento: Cliente \" + $json.nome + \" tem interesse em \" + $json.interesse,\n  \"category\": \"agents\"\n}",
+        "options": {}
+      },
+      "id": "moura-ai-qualifier",
+      "name": "Moura.ai: Agente SDR Qualificador",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "notification-success",
+      "name": "Notificar Vendedor no WhatsApp / Telegram",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [880, 300]
+    }
+  ],
+  "connections": {
+    "Webhook: Lead Recebido do Site WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Formatar Dados do Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Formatar Dados do Lead": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Agente SDR Qualificador",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Agente SDR Qualificador": {
+      "main": [
+        [
+          {
+            "node": "Notificar Vendedor no WhatsApp / Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

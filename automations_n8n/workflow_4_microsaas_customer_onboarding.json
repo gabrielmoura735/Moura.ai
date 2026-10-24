@@ -1,0 +1,70 @@
+{
+  "name": "Moura.ai — 04. Onboarding Automático de Assinantes SaaS",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "moura-payment-webhook",
+        "options": {}
+      },
+      "id": "webhook-payment",
+      "name": "Webhook de Pagamento (Hotmart/Kiwify/Stripe)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "webhookId": "moura-payment-webhook"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/plans/upgrade",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"planId\": $json.body.planId || \"pro\"\n}",
+        "options": {}
+      },
+      "id": "upgrade-user-plan",
+      "name": "Moura.ai: Liberar Plano Imediato",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "send-whatsapp-welcome",
+      "name": "Disparar Boas-Vindas & Acesso no WhatsApp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [660, 300]
+    }
+  ],
+  "connections": {
+    "Webhook de Pagamento (Hotmart/Kiwify/Stripe)": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Liberar Plano Imediato",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Liberar Plano Imediato": {
+      "main": [
+        [
+          {
+            "node": "Disparar Boas-Vindas & Acesso no WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

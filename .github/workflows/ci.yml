@@ -1,0 +1,31 @@
+name: Moura.ai CI - Qualidade e Testes Contínuos
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  test_and_build:
+    name: Build & Test Suite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do Repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: 'npm'
+
+      - name: Instalar Dependências
+        run: npm install
+
+      - name: Compilar TypeScript
+        run: npm run build
+
+      - name: Executar Testes Automatizados (33 Testes)
+        run: npm test

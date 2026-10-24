@@ -1,0 +1,112 @@
+{
+  "name": "Moura.ai — 03. Monitoramento de Saúde & Autocorreção Ativa",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "cron-15m",
+      "name": "Verificação a Cada 15 Minutos",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [220, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/health",
+        "options": {}
+      },
+      "id": "healthcheck",
+      "name": "Moura.ai: Healthcheck API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "status-ok-check",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "ok",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "check-condition",
+      "name": "Status é OK?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "alert-critical",
+      "name": "Acionar Self-Healing & Notificar Admin",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [880, 420]
+    }
+  ],
+  "connections": {
+    "Verificação a Cada 15 Minutos": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Healthcheck API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Healthcheck API": {
+      "main": [
+        [
+          {
+            "node": "Status é OK?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Status é OK?": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Acionar Self-Healing & Notificar Admin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}

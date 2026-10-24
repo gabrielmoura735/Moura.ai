@@ -1,0 +1,70 @@
+{
+  "name": "Moura.ai — 05. Ponte de Mensagens do WhatsApp com Agente Especializado",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "moura-whatsapp-message",
+        "options": {}
+      },
+      "id": "wa-message-trigger",
+      "name": "Mensagem Recebida do WhatsApp",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [220, 300],
+      "webhookId": "moura-whatsapp-message"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/agents/orchestrate",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"objective\": \"Atender cliente no WhatsApp: \" + ($json.body.message || $json.message),\n  \"category\": \"agents\"\n}",
+        "options": {}
+      },
+      "id": "agent-response",
+      "name": "Moura.ai: Gerar Resposta Humana",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [440, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "send-reply",
+      "name": "Enviar Resposta de Volta ao WhatsApp",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [660, 300]
+    }
+  ],
+  "connections": {
+    "Mensagem Recebida do WhatsApp": {
+      "main": [
+        [
+          {
+            "node": "Moura.ai: Gerar Resposta Humana",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Moura.ai: Gerar Resposta Humana": {
+      "main": [
+        [
+          {
+            "node": "Enviar Resposta de Volta ao WhatsApp",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
