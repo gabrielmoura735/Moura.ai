@@ -48,8 +48,44 @@ async function runTestSuite() {
   assert(quota.allowed === true, 'Admin tem permissão para criar sites');
   assert(quota.limit === 200, 'Limite do Admin no plano Galaxi é 200/dia');
 
-  // 3. Teste do Builder de Sites para WhatsApp
-  console.log(`\n▶ Teste 3: Builder de Sites para WhatsApp`);
+  // 3. Teste da Logo Oficial e Favicon
+  console.log(`\n▶ Teste 3: Identidade Visual e Logo Oficial Cósmica`);
+  const logoPath = path.resolve(process.cwd(), 'public/assets/logo.png');
+  const faviconPath = path.resolve(process.cwd(), 'public/favicon.png');
+  assert(fs.existsSync(logoPath), 'Arquivo public/assets/logo.png existe em alta resolução');
+  assert(fs.existsSync(faviconPath), 'Arquivo public/favicon.png existe para a aba do navegador');
+
+  // 4. Teste de Perfil, Temas e Classificação Indicativa
+  console.log(`\n▶ Teste 4: Configurações de Perfil, Temas e Classificação`);
+  const updatedUser = DB.updateUserProfile(admin!.id, {
+    birthDate: '15/08/1998',
+    theme: 'cosmic_purple',
+    contentRating: 'sem_filtro',
+    imageVerificationEnabled: true
+  });
+  assert(updatedUser?.birthDate === '15/08/1998', 'Data de nascimento dd/mm/aaaa salva com sucesso');
+  assert(updatedUser?.theme === 'cosmic_purple', 'Tema Lilás Cósmico aplicado');
+  assert(updatedUser?.contentRating === 'sem_filtro', 'Classificação de conteúdo sem filtro ativada com responsabilidade');
+  assert(updatedUser?.imageVerificationEnabled === true, 'Toggle de verificação de imagem configurado');
+
+  // 5. Teste da Fábrica de Personagens por IA
+  console.log(`\n▶ Teste 5: Fábrica de Personagens por IA`);
+  const newChar = DB.createCharacter({
+    userId: admin!.id,
+    name: 'Aria Nebulosa',
+    archetype: 'Oráculo Cósmica',
+    voiceTone: 'Enigmática e sábia',
+    backstory: 'Habita a constelação Mouras-World.',
+    promptImage: 'Cosmic goddess portrait 8k',
+    systemPrompt: 'Você é Aria Nebulosa.',
+    contentRating: 'sem_filtro'
+  });
+  assert(!!newChar.id, 'Personagem criado com ID único no banco');
+  const charList = DB.listCharactersByUser(admin!.id);
+  assert(charList.some(c => c.name === 'Aria Nebulosa'), 'Personagem recuperado na listagem do usuário');
+
+  // 6. Teste do Builder de Sites para WhatsApp
+  console.log(`\n▶ Teste 6: Builder de Sites para WhatsApp`);
   const waSite = digitalBuilder.buildWhatsAppSite({
     businessName: 'Hamburgueria Artesanal Moura',
     whatsappNumber: '5511988887777',
@@ -65,8 +101,8 @@ async function runTestSuite() {
   assert(waSite.previewHtml.includes('wa-pulse'), 'HTML contém botão flutuante pulsante com animação CSS');
   assert(waSite.previewHtml.includes('leadModal'), 'HTML contém modal inteligente de pré-atendimento');
 
-  // 4. Teste do Builder de Micro-SaaS
-  console.log(`\n▶ Teste 4: Builder de Micro-SaaS e Arquitetura Operacional`);
+  // 7. Teste do Builder de Micro-SaaS
+  console.log(`\n▶ Teste 7: Builder de Micro-SaaS e Arquitetura Operacional`);
   const microSaaS = digitalBuilder.buildMicroSaaS({
     name: 'ClinicaZap AI',
     niche: 'Clínicas Odontológicas',
@@ -76,8 +112,8 @@ async function runTestSuite() {
   assert(microSaaS.files.some(f => f.path.includes('server.js')), 'Micro-SaaS gerou backend operacional');
   assert(microSaaS.files.some(f => f.path.includes('package.json')), 'Micro-SaaS gerou manifesto de dependências');
 
-  // 5. Teste do Estúdio de Mídia (Vídeos, Shorts & Reels 9:16)
-  console.log(`\n▶ Teste 5: Estúdio de Mídia e Roteiros Virais 9:16`);
+  // 8. Teste do Estúdio de Mídia (Vídeos, Shorts & Reels 9:16)
+  console.log(`\n▶ Teste 8: Estúdio de Mídia e Roteiros Virais 9:16`);
   const viralScript = mediaService.generateViralScript({
     topic: 'Como atrair clientes todos os dias com IA',
     niche: 'Prestadores de Serviços',
@@ -88,16 +124,25 @@ async function runTestSuite() {
   assert(viralScript.scenes[0].sfx.length > 0, 'Cenas possuem marcações de áudio e efeitos sonoros (SFX)');
   assert(viralScript.scenes[0].aiVideoPrompt.length > 0, 'Cenas possuem prompts de vídeo prontos para IA');
 
-  // 6. Teste Obrigatório de Autocorreção (Self-Healing Loop)
-  console.log(`\n▶ Teste 6: Ciclo de Autocorreção Obrigatório (Self-Healing Loop)`);
-  const malformedHtml = `<div class="container"><div class="card"><h1>Título</h1>`; // Faltando 2 </div>
+  // 9. Teste do Estúdio de Carrosséis
+  console.log(`\n▶ Teste 9: Estúdio de Carrosséis para Redes Sociais`);
+  const carousel = mediaService.generateCarousel({
+    title: '5 Gatilhos Mentais de Alta Conversão',
+    niche: 'Copywriting e Vendas'
+  });
+  assert(carousel.slides.length === 5, 'Carrossel gerou 5 slides estruturados');
+  assert(carousel.slides[0].title.length > 0, 'Slide de capa possui título magnético');
+
+  // 10. Teste Obrigatório de Autocorreção (Self-Healing Loop)
+  console.log(`\n▶ Teste 10: Ciclo de Autocorreção Obrigatório (Self-Healing Loop)`);
+  const malformedHtml = `<div class="container"><div class="card"><h1>Título</h1>`;
   const healingResult = selfHealing.runDiagnosticCycle(malformedHtml, 'html');
   assert(healingResult.initialStatus === 'error_detected', 'Detector identificou tag não fechada corretamente');
   assert(healingResult.retestStatus === 'passed', 'Auto-corretor aplicou o patch e re-teste foi aprovado');
   assert(!!healingResult.logId, 'Evento de autocorreção registrado na auditoria da plataforma');
 
-  // 7. Teste de Orquestração Multi-Agente
-  console.log(`\n▶ Teste 7: Orquestrador de Agentes Especializados`);
+  // 11. Teste de Orquestração Multi-Agente
+  console.log(`\n▶ Teste 11: Orquestrador de Agentes Especializados`);
   const orchestration = await orchestrator.orchestrate({
     objective: 'Desenvolver um bot de agendamento integrado ao WhatsApp',
     category: 'agents',
@@ -106,8 +151,8 @@ async function runTestSuite() {
   assert(orchestration.steps.length >= 4, 'Orquestrador executou os 4 agentes principais (Planejamento, Segurança, Automação, QA)');
   assert(orchestration.totalTimeMs >= 0, 'Duração da orquestração foi monitorada com precisão');
 
-  // 8. Teste de Integridade dos Workflows n8n
-  console.log(`\n▶ Teste 8: Validação dos Workflows n8n`);
+  // 12. Teste de Integridade dos Workflows n8n
+  console.log(`\n▶ Teste 12: Validação dos Workflows n8n`);
   const n8nDir = path.resolve(process.cwd(), 'automations_n8n');
   const expectedWorkflows = [
     'workflow_1_whatsapp_lead_qualification.json',

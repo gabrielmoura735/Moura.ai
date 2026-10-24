@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Moura.ai — Plataforma Autônoma de Inteligência Artificial & Produtos Digitais</title>
+  <link rel="icon" type="image/png" href="/assets/logo.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,19 +17,6 @@
         extend: {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'sans-serif'],
-          },
-          colors: {
-            brand: {
-              50: '#ecfeff',
-              100: '#cffafe',
-              400: '#22d3ee',
-              500: '#06b6d4',
-              600: '#0891b2',
-            },
-            accent: {
-              500: '#8b5cf6',
-              600: '#7c3aed',
-            }
           }
         }
       }
@@ -41,41 +29,89 @@
     ::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.4); border-radius: 9999px; }
     ::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.7); }
     
-    .glow-cyan {
-      box-shadow: 0 0 25px -5px rgba(6, 182, 212, 0.3);
+    .glow-planet {
+      filter: drop-shadow(0 0 16px rgba(168, 85, 247, 0.45));
     }
-    .glow-violet {
-      box-shadow: 0 0 25px -5px rgba(139, 92, 246, 0.3);
+    
+    /* Dynamic Theme Support */
+    body.theme-purple {
+      background-color: #0b0713 !important;
+      color: #f3e8ff !important;
+    }
+    body.theme-purple .bg-slate-900 {
+      background-color: #170d28 !important;
+      border-color: #3b1d60 !important;
+    }
+    body.theme-purple .bg-slate-950 {
+      background-color: #0b0713 !important;
+      border-color: #271442 !important;
+    }
+
+    body.theme-blue {
+      background-color: #030712 !important;
+    }
+    body.theme-blue .bg-slate-900 {
+      background-color: #0b152d !important;
+      border-color: #1e3a8a !important;
+    }
+
+    body.theme-light {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .bg-slate-900,
+    body.theme-light .bg-slate-900\/60,
+    body.theme-light .bg-slate-900\/90 {
+      background-color: #ffffff !important;
+      border-color: #e2e8f0 !important;
+      color: #0f172a !important;
+    }
+    body.theme-light .bg-slate-950,
+    body.theme-light .bg-slate-950\/80 {
+      background-color: #f1f5f9 !important;
+      border-color: #cbd5e1 !important;
+    }
+    body.theme-light .text-white {
+      color: #0f172a !important;
+    }
+    body.theme-light .text-slate-400 {
+      color: #64748b !important;
     }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex antialiased selection:bg-cyan-500 selection:text-slate-950 transition-colors duration-200">
+<body id="app-body" class="bg-slate-950 text-slate-100 min-h-screen flex antialiased selection:bg-purple-500 selection:text-white transition-colors duration-200">
 
   <!-- SIDEBAR FIXA -->
   <aside class="w-64 border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-xl flex flex-col justify-between p-4 shrink-0 hidden md:flex">
     <div>
-      <!-- Brand Logo -->
-      <div class="flex items-center gap-3 px-2 py-3 mb-6">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 via-teal-400 to-violet-600 flex items-center justify-center font-extrabold text-slate-950 text-xl shadow-lg shadow-cyan-500/20">
-          M
-        </div>
+      <!-- Brand Logo com a Imagem Oficial do Planeta -->
+      <div class="flex items-center gap-3 px-2 py-2 mb-5 cursor-pointer" onclick="navigate('dashboard')">
+        <img src="/assets/logo.png" alt="Moura.ai Logo" class="w-11 h-11 glow-planet object-contain">
         <div>
-          <span class="text-xl font-black tracking-tight text-white flex items-center gap-1.5">
-            Moura<span class="text-cyan-400">.ai</span>
+          <span class="text-xl font-black tracking-tight text-white flex items-center gap-1">
+            Moura<span class="text-purple-400">.ai</span>
           </span>
-          <span class="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Mouras-World Global</span>
+          <span class="text-[10px] text-purple-300/80 font-bold uppercase tracking-wider block">Mouras-World</span>
         </div>
       </div>
 
       <!-- Navigation Links -->
       <nav class="space-y-1 text-sm font-medium">
-        <button onclick="navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-cyan-400 bg-cyan-500/10 border border-cyan-500/20 transition-all">
+        <button onclick="navigate('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-purple-400 bg-purple-500/10 border border-purple-500/20 transition-all">
           <i class="fa-solid fa-chart-pie w-5 text-center"></i>
           <span>Dashboard Geral</span>
         </button>
         <button onclick="navigate('whatsapp-sites')" id="nav-whatsapp-sites" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-brands fa-whatsapp w-5 text-center text-emerald-400"></i>
           <span>Sites para WhatsApp</span>
+        </button>
+        <button onclick="navigate('characters')" id="nav-characters" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-masks-theater w-5 text-center text-fuchsia-400"></i>
+          <span>Personagens por IA</span>
+        </button>
+        <button onclick="navigate('carousels')" id="nav-carousels" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-images w-5 text-center text-amber-400"></i>
+          <span>Carrosséis Sociais</span>
         </button>
         <button onclick="navigate('studio')" id="nav-studio" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-solid fa-robot w-5 text-center text-cyan-400"></i>
@@ -101,6 +137,10 @@
           <i class="fa-solid fa-gem w-5 text-center text-amber-400"></i>
           <span>Planos & Cotas</span>
         </button>
+        <button onclick="navigate('profile')" id="nav-profile" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
+          <i class="fa-solid fa-user-gear w-5 text-center text-purple-400"></i>
+          <span>Perfil & Temas</span>
+        </button>
         <button onclick="navigate('admin')" id="nav-admin" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-solid fa-shield-halved w-5 text-center text-blue-400"></i>
           <span>Painel Admin</span>
@@ -112,13 +152,13 @@
     <div class="p-3.5 rounded-2xl bg-slate-900/90 border border-slate-800">
       <div class="flex items-center justify-between mb-2">
         <span class="text-xs font-semibold text-slate-300" id="user-name-display">Gabriel Moura</span>
-        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30" id="user-plan-badge">GALAXI</span>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/30" id="user-plan-badge">GALAXI</span>
       </div>
       <div class="text-[11px] text-slate-400 mb-2 flex items-center gap-1.5">
-        <i class="fa-solid fa-infinity text-cyan-400"></i>
+        <i class="fa-solid fa-infinity text-purple-400"></i>
         <span>Tokens: <strong class="text-white">Ilimitados</strong></span>
       </div>
-      <button onclick="navigate('plans')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-cyan-500 to-violet-600 text-slate-950 font-bold text-xs hover:opacity-90 transition-opacity">
+      <button onclick="navigate('plans')" class="w-full py-1.5 rounded-lg bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-xs hover:opacity-90 transition-opacity">
         Gerenciar Plano
       </button>
     </div>
@@ -130,6 +170,7 @@
     <!-- Top Navigation Header -->
     <header class="h-16 border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-6 flex items-center justify-between sticky top-0 z-30">
       <div class="flex items-center gap-4">
+        <img src="/assets/logo.png" alt="Logo" class="w-8 h-8 glow-planet md:hidden">
         <h1 class="text-lg font-bold text-white tracking-tight" id="view-title">Dashboard Geral</h1>
         <span class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping"></span>
@@ -137,8 +178,8 @@
         </span>
       </div>
       <div class="flex items-center gap-3">
-        <button onclick="toggleDarkMode()" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors" title="Alternar Tema Claro/Escuro">
-          <i class="fa-solid fa-sun text-sm" id="theme-icon"></i>
+        <button onclick="navigate('profile')" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors" title="Configurar Tema e Perfil">
+          <i class="fa-solid fa-palette text-sm"></i>
         </button>
         <a href="https://github.com/gabrielmoura735/Moura.ai" target="_blank" class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 text-xs font-medium text-slate-300 hover:text-white flex items-center gap-2 transition-all">
           <i class="fa-brands fa-github text-sm"></i>
@@ -154,22 +195,23 @@
       <!-- VIEW 1: DASHBOARD -->
       <!-- ==================================================================== -->
       <section id="view-dashboard" class="space-y-6">
-        <!-- Hero Banner -->
-        <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-slate-900 to-cyan-950/40 border border-slate-800 relative overflow-hidden">
+        <div class="p-8 rounded-3xl bg-gradient-to-r from-slate-900 via-purple-950/30 to-slate-900 border border-purple-500/20 relative overflow-hidden">
           <div class="max-w-2xl relative z-10">
-            <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-2 block">Ecossistema Moura.ai</span>
-            <h2 class="text-3xl font-extrabold text-white mb-3">Bem-vindo ao centro de criação e escala global da Moura.ai</h2>
+            <span class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2 block flex items-center gap-2">
+              <i class="fa-solid fa-sparkles"></i> Moura.ai Cósmica • Mouras-World
+            </span>
+            <h2 class="text-3xl font-extrabold text-white mb-3">Sua central inteligente para criar produtos digitais, sites e personagens</h2>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Transforme ideias em sites para WhatsApp, Micro-SaaS funcionais, roteiros virais e automações no n8n. Tokens 100% ilimitados e arquitetura autônoma com autocorreção.
+              Gere sites para WhatsApp com fechamento em 1 clique, crie personagens com histórias vivas, roteiros virais e carrosséis com visualizador integrado. Tokens 100% ilimitados.
             </p>
             <div class="flex flex-wrap gap-3">
-              <button onclick="navigate('whatsapp-sites')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm shadow-lg shadow-emerald-500/20 transition-all flex items-center gap-2">
-                <i class="fa-brands fa-whatsapp text-lg"></i>
-                <span>Criar Site para WhatsApp</span>
+              <button onclick="navigate('characters')" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-lg shadow-purple-500/25 transition-all flex items-center gap-2">
+                <i class="fa-solid fa-masks-theater"></i>
+                <span>Criar Personagem por IA</span>
               </button>
-              <button onclick="navigate('studio')" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm border border-slate-700 transition-all flex items-center gap-2">
-                <i class="fa-solid fa-sparkles text-cyan-400"></i>
-                <span>Abrir Studio de Agentes</span>
+              <button onclick="navigate('whatsapp-sites')" class="px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm transition-all flex items-center gap-2">
+                <i class="fa-brands fa-whatsapp text-lg"></i>
+                <span>Site para WhatsApp</span>
               </button>
             </div>
           </div>
@@ -180,10 +222,10 @@
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div class="flex items-center justify-between mb-3 text-slate-400">
               <span class="text-xs font-semibold">Tokens de IA</span>
-              <i class="fa-solid fa-infinity text-cyan-400"></i>
+              <i class="fa-solid fa-infinity text-purple-400"></i>
             </div>
             <div class="text-2xl font-black text-white">ILIMITADO</div>
-            <p class="text-[11px] text-cyan-400 mt-1">Livre para criar sem bloqueio de tokens</p>
+            <p class="text-[11px] text-purple-400 mt-1">Livre para criar sem bloqueio de tokens</p>
           </div>
 
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
@@ -199,13 +241,11 @@
 
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
             <div class="flex items-center justify-between mb-3 text-slate-400">
-              <span class="text-xs font-semibold">Cota Diária de Mídia</span>
-              <i class="fa-solid fa-clapperboard text-rose-400"></i>
+              <span class="text-xs font-semibold">Personagens Criados</span>
+              <i class="fa-solid fa-masks-theater text-fuchsia-400"></i>
             </div>
-            <div class="text-2xl font-black text-white" id="dash-videos-quota">0 / 200</div>
-            <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
-              <div class="bg-rose-500 h-full w-[1%]"></div>
-            </div>
+            <div class="text-2xl font-black text-white" id="dash-chars-count">2 Ativos</div>
+            <p class="text-[11px] text-fuchsia-400 mt-1">Avatares e bots configurados</p>
           </div>
 
           <div class="p-5 rounded-2xl bg-slate-900/80 border border-slate-800">
@@ -220,7 +260,226 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 2: SITES PARA WHATSAPP (BUILDER & SANDBOX) -->
+      <!-- VIEW 2: FÁBRICA DE PERSONAGENS POR IA (NOVO!) -->
+      <!-- ==================================================================== -->
+      <section id="view-characters" class="space-y-6 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-masks-theater text-fuchsia-400"></i>
+              <span>Fábrica de Personagens por IA</span>
+            </h2>
+            <p class="text-slate-400 text-sm">Crie avatares, personas para chatbots estilo Character.ai, mascotes de marcas e narrativas vivas.</p>
+          </div>
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-fuchsia-500/10 text-fuchsia-400 border border-fuchsia-500/20">
+            Chatbot & Imagem
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          <!-- Criador Form -->
+          <div class="lg:col-span-5 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Personagem:</label>
+              <input type="text" id="char-input-name" value="Luna — A Oráculo Cósmica" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-fuchsia-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Arquétipo / Papel:</label>
+              <select id="char-input-archetype" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-fuchsia-500 outline-none">
+                <option value="Guardiã Cósmica & Mentora Espiritual">Guardiã Cósmica & Mentora</option>
+                <option value="Especialista em Vendas & Negociação">Especialista em Vendas & SDR</option>
+                <option value="Hacker & Operador Cyberpunk">Hacker & Operador Cyberpunk</option>
+                <option value="Mascote Amigável de Marca">Mascote Amigável de Marca</option>
+                <option value="Personagem de Ficção & Aventura">Personagem de Ficção & Aventura</option>
+                <option value="Comediante Sarcástico">Comediante Sarcástico</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Tom de Voz:</label>
+              <input type="text" id="char-input-voice" value="Misteriosa, sábia, poética e empática" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-fuchsia-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Ideia Central de História (Lore):</label>
+              <textarea id="char-input-backstory" rows="3" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-fuchsia-500 outline-none" placeholder="Conte brevemente quem ele é...">Uma entidade nascida entre as estrelas da galáxia Moura.ai que viaja entre dimensões digitais trazendo revelações estratégicas.</textarea>
+            </div>
+            <button onclick="createCharacter()" id="btn-create-char" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-fuchsia-600 to-purple-600 hover:opacity-90 text-white font-bold text-sm shadow-lg shadow-fuchsia-500/20 transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-wand-magic-sparkles"></i>
+              <span>Gerar Ficha Completa do Personagem</span>
+            </button>
+          </div>
+
+          <!-- Cards de Personagens Existentes -->
+          <div class="lg:col-span-7 space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-users text-fuchsia-400"></i>
+              <span>Personagens Ativos no seu Universo:</span>
+            </h3>
+            <div id="characters-list" class="space-y-4 max-h-[540px] overflow-y-auto pr-1"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 3: CARROSSÉIS SOCIAIS COM VISUALIZADOR SLIDE A SLIDE (NOVO!) -->
+      <!-- ==================================================================== -->
+      <section id="view-carousels" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-images text-amber-400"></i>
+            <span>Estúdio Interativo de Carrosséis</span>
+          </h2>
+          <p class="text-slate-400 text-sm">Geração de carrosséis magnéticos para Instagram e LinkedIn com visualizador interativo slide a slide.</p>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Título do Carrossel / Tema:</label>
+              <input type="text" id="carousel-input-title" value="5 Estratégias de IA para Multiplicar seu Faturamento em 2026" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-amber-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Nicho / Área de Atuação:</label>
+              <input type="text" id="carousel-input-niche" value="Negócios Digitais & Tecnologia" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-amber-500 outline-none">
+            </div>
+          </div>
+          <button onclick="generateInteractiveCarousel()" id="btn-gen-carousel" class="px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-lg shadow-amber-500/20 transition-all flex items-center gap-2">
+            <i class="fa-solid fa-wand-magic-sparkles"></i>
+            <span>Gerar Carrossel com 5 Slides</span>
+          </button>
+
+          <!-- Interactive Slide Viewer -->
+          <div id="carousel-viewer-container" class="pt-6 border-t border-slate-800 hidden space-y-4">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-slate-400" id="carousel-slide-indicator">Slide 1 de 5</span>
+              <div class="flex gap-2">
+                <button onclick="prevSlide()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white">
+                  <i class="fa-solid fa-chevron-left"></i> Anterior
+                </button>
+                <button onclick="nextSlide()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-white">
+                  Próximo <i class="fa-solid fa-chevron-right"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Card Visual do Slide -->
+            <div id="carousel-slide-card" class="p-8 rounded-3xl bg-gradient-to-br from-slate-900 to-purple-950/40 border-2 border-purple-500/40 min-h-[260px] flex flex-col justify-between shadow-2xl relative">
+              <div>
+                <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-400 border border-purple-500/30 mb-3 inline-block" id="slide-badge">CAPA</span>
+                <h3 class="text-2xl font-black text-white mb-3" id="slide-title">Título do Slide</h3>
+                <p class="text-slate-300 text-sm leading-relaxed whitespace-pre-line" id="slide-subtitle">Texto do conteúdo...</p>
+              </div>
+              <div class="flex items-center justify-between pt-4 border-t border-slate-800/80 text-xs text-slate-500">
+                <span>Moura.ai • Mouras-World</span>
+                <span>Deslize 👉</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 4: CONFIGURAÇÕES DO PERFIL, TEMAS & CLASSIFICAÇÃO (NOVO!) -->
+      <!-- ==================================================================== -->
+      <section id="view-profile" class="space-y-6 hidden">
+        <div>
+          <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+            <i class="fa-solid fa-user-gear text-purple-400"></i>
+            <span>Perfil, Temas Visuais & Políticas de Conteúdo</span>
+          </h2>
+          <p class="text-slate-400 text-sm">Personalize seus dados, escolha o tema da sua interface e configure os filtros da sua IA com autonomia e responsabilidade.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Dados Pessoais & Temas -->
+          <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-id-card text-purple-400"></i>
+              <span>Dados do Criador</span>
+            </h3>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Seu Nome Completo:</label>
+              <input type="text" id="profile-name" value="Gabriel Moura" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Data de Nascimento (dd/mm/aaaa):</label>
+              <input type="text" id="profile-dob" placeholder="15/08/1998" value="15/08/1998" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
+            </div>
+
+            <!-- Seletor de Temas -->
+            <div class="pt-4 border-t border-slate-800">
+              <label class="block text-xs font-semibold text-slate-300 mb-2">Tema Visual da Plataforma:</label>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <button onclick="applyTheme('cosmic_purple')" class="p-2.5 rounded-xl border border-purple-500 bg-purple-950/40 text-purple-300 text-xs font-bold flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span>
+                  <span>Lilás Cósmico</span>
+                </button>
+                <button onclick="applyTheme('dark')" class="p-2.5 rounded-xl border border-slate-700 bg-slate-950 text-slate-300 text-xs font-medium flex items-center gap-2 hover:border-slate-500">
+                  <span class="w-3 h-3 rounded-full bg-slate-700 inline-block"></span>
+                  <span>Escuro Obsidian</span>
+                </button>
+                <button onclick="applyTheme('cosmic_blue')" class="p-2.5 rounded-xl border border-blue-900 bg-blue-950/40 text-blue-300 text-xs font-medium flex items-center gap-2 hover:border-blue-600">
+                  <span class="w-3 h-3 rounded-full bg-blue-500 inline-block"></span>
+                  <span>Azul Cósmico</span>
+                </button>
+                <button onclick="applyTheme('cyber_emerald')" class="p-2.5 rounded-xl border border-emerald-900 bg-emerald-950/40 text-emerald-300 text-xs font-medium flex items-center gap-2 hover:border-emerald-600">
+                  <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
+                  <span>Esmeralda</span>
+                </button>
+                <button onclick="applyTheme('light')" class="p-2.5 rounded-xl border border-slate-300 bg-white text-slate-800 text-xs font-medium flex items-center gap-2 hover:border-slate-400">
+                  <span class="w-3 h-3 rounded-full bg-amber-400 inline-block"></span>
+                  <span>Claro Tech</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Classificação Indicativa & Termo de Responsabilidade -->
+          <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
+            <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-shield-halved text-purple-400"></i>
+              <span>Classificação de Conteúdo & Verificação</span>
+            </h3>
+
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1">Classificação Indicativa da IA:</label>
+              <select id="profile-rating" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
+                <option value="livre">Livre — Conteúdo Geral para todas as idades</option>
+                <option value="10">Classificação 10 anos</option>
+                <option value="12">Classificação 12 anos</option>
+                <option value="14">Classificação 14 anos</option>
+                <option value="16">Classificação 16 anos (Narrativas e temas maduros)</option>
+                <option value="18">Classificação 18 anos (Conteúdo adulto/ficção avançada)</option>
+                <option value="sem_filtro" selected>Sem Filtro — Criatividade Livre com Responsabilidade</option>
+              </select>
+            </div>
+
+            <!-- Toggle Verificação de Imagem -->
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-white block">Verificação de Imagem Ativa</span>
+                <span class="text-[11px] text-slate-400">Você administra sua própria IA. Desative se desejar processamento sem moderação.</span>
+              </div>
+              <input type="checkbox" id="profile-image-guard" checked class="w-5 h-5 accent-purple-500 rounded cursor-pointer">
+            </div>
+
+            <!-- Termo de Responsabilidade -->
+            <div class="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 text-xs text-purple-200 leading-relaxed">
+              <strong class="text-white flex items-center gap-1.5 mb-1">
+                <i class="fa-solid fa-triangle-exclamation text-amber-400"></i> Termo de Autonomia & Responsabilidade:
+              </strong>
+              A Moura.ai concede liberdade para você criar personagens, chatbots e conteúdos no nicho que desejar. A responsabilidade legal pelo uso do material gerado é do criador. É estritamente proibido o uso indevido da imagem de pessoas reais sem consentimento ou para difamação.
+            </div>
+
+            <button onclick="saveProfileSettings()" id="btn-save-profile" class="w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-sm shadow-lg shadow-purple-500/20 transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-floppy-disk"></i>
+              <span>Salvar Configurações do Perfil</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================================== -->
+      <!-- VIEW 5: SITES PARA WHATSAPP -->
       <!-- ==================================================================== -->
       <section id="view-whatsapp-sites" class="space-y-6 hidden">
         <div class="flex items-center justify-between">
@@ -234,7 +493,6 @@
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <!-- Form Configurator -->
           <div class="lg:col-span-5 p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Nome do Negócio / Empresa:</label>
@@ -242,7 +500,7 @@
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Número do WhatsApp (com DDI e DDD):</label>
-              <input type="text" id="wa-input-phone" value="5511999998888" placeholder="Ex: 5511999998888" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">
+              <input type="text" id="wa-input-phone" value="5511999998888" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-emerald-500 outline-none">
             </div>
             <div>
               <label class="block text-xs font-semibold text-slate-300 mb-1">Título de Impacto (Headline):</label>
@@ -258,7 +516,6 @@
             </button>
           </div>
 
-          <!-- Sandbox Live Preview -->
           <div class="lg:col-span-7 p-4 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col h-[580px]">
             <div class="flex items-center justify-between pb-3 border-b border-slate-800">
               <div class="flex items-center gap-2">
@@ -267,7 +524,7 @@
                 <span class="w-3 h-3 rounded-full bg-emerald-500 inline-block"></span>
                 <span class="text-xs text-slate-400 ml-2 font-mono">Sandbox Preview • Live Iframe</span>
               </div>
-              <button onclick="openPreviewNewTab()" class="text-xs text-cyan-400 hover:underline flex items-center gap-1">
+              <button onclick="openPreviewNewTab()" class="text-xs text-purple-400 hover:underline flex items-center gap-1">
                 <span>Abrir em Nova Aba</span>
                 <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
               </button>
@@ -280,32 +537,25 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 3: MULTI-AGENTES STUDIO -->
+      <!-- VIEW 6: MULTI-AGENTES STUDIO -->
       <!-- ==================================================================== -->
       <section id="view-studio" class="space-y-6 hidden">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="text-2xl font-bold text-white">Studio de Agentes Especializados</h2>
-            <p class="text-slate-400 text-sm">Planejamento, Arquitetura, Segurança, Automação n8n e Revisão colaborativa em tempo real.</p>
-          </div>
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
-            10 Agentes Ativos
-          </span>
+        <div>
+          <h2 class="text-2xl font-bold text-white">Studio de Agentes Especializados</h2>
+          <p class="text-slate-400 text-sm">Planejamento, Arquitetura, Segurança, Automação n8n e Revisão colaborativa em tempo real.</p>
         </div>
 
         <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800 space-y-4">
           <div>
             <label class="block text-xs font-semibold text-slate-300 mb-1">Qual o objetivo do projeto ou funcionalidade?</label>
             <div class="flex gap-2">
-              <input type="text" id="agent-input-objective" placeholder="Ex: Criar uma esteira de captura de clientes para imobiliária com agendamento automático" value="Criar um funil de agendamento automático de consultas com integração no WhatsApp" class="flex-1 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-cyan-500 outline-none">
-              <button onclick="runOrchestrator()" id="btn-run-agents" class="px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-violet-600 hover:opacity-90 text-slate-950 font-bold text-sm transition-all flex items-center gap-2">
+              <input type="text" id="agent-input-objective" value="Criar um funil de agendamento automático de consultas com integração no WhatsApp" class="flex-1 px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
+              <button onclick="runOrchestrator()" id="btn-run-agents" class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:opacity-90 text-white font-bold text-sm transition-all flex items-center gap-2">
                 <i class="fa-solid fa-play"></i>
                 <span>Executar Esquadrão</span>
               </button>
             </div>
           </div>
-
-          <!-- Steps Feed -->
           <div id="orchestrator-output" class="space-y-3 pt-4 border-t border-slate-800 hidden">
             <h3 class="text-sm font-bold text-white flex items-center gap-2">
               <i class="fa-solid fa-circle-check text-emerald-400"></i>
@@ -317,7 +567,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 4: VÍDEOS, SHORTS & REELS STUDIO -->
+      <!-- VIEW 7: VÍDEOS, SHORTS & REELS -->
       <!-- ==================================================================== -->
       <section id="view-media-studio" class="space-y-6 hidden">
         <div>
@@ -340,8 +590,6 @@
             <i class="fa-solid fa-film"></i>
             <span>Gerar Roteiro Viral 9:16</span>
           </button>
-
-          <!-- Result Card -->
           <div id="reels-result-container" class="pt-4 border-t border-slate-800 hidden space-y-4">
             <div class="p-4 rounded-xl bg-slate-800/80 border border-slate-700">
               <span class="text-xs font-bold text-rose-400 block mb-1">🎯 GANCHO DE RETENÇÃO (3 PRIMEIROS SEGUNDOS):</span>
@@ -353,7 +601,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 5: AUTOMAÇÕES N8N -->
+      <!-- VIEW 8: AUTOMAÇÕES N8N -->
       <!-- ==================================================================== -->
       <section id="view-n8n-automations" class="space-y-6 hidden">
         <div>
@@ -393,8 +641,8 @@
           <div class="p-5 rounded-2xl bg-slate-900 border border-slate-800 flex flex-col justify-between">
             <div>
               <div class="flex items-center justify-between mb-3">
-                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">Fluxo 03</span>
-                <i class="fa-solid fa-heart-pulse text-cyan-400 text-lg"></i>
+                <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-purple-500/10 text-purple-400 border border-purple-500/20">Fluxo 03</span>
+                <i class="fa-solid fa-heart-pulse text-purple-400 text-lg"></i>
               </div>
               <h3 class="text-base font-bold text-white mb-2">Monitor de Saúde & Autocorreção</h3>
               <p class="text-xs text-slate-400 leading-relaxed mb-4">Pinga a Moura.ai a cada 15 min e dispara auto-recuperação caso detecte falhas.</p>
@@ -404,15 +652,10 @@
             </button>
           </div>
         </div>
-
-        <div class="p-6 rounded-2xl bg-slate-900 border border-slate-800">
-          <h3 class="text-base font-bold text-white mb-2">Como Importar os Arquivos no seu n8n:</h3>
-          <p class="text-sm text-slate-400 mb-4">Os 5 arquivos JSON estão salvos na pasta <code class="text-cyan-400 bg-slate-800 px-2 py-1 rounded">automations_n8n/</code> prontos para arrastar e soltar direto na tela do seu n8n.</p>
-        </div>
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 6: CONSOLE DE AUTOCORREÇÃO (SELF-HEALING) -->
+      <!-- VIEW 9: AUTOCORREÇÃO (SELF-HEALING) -->
       <!-- ==================================================================== -->
       <section id="view-self-healing" class="space-y-6 hidden">
         <div>
@@ -429,8 +672,6 @@
             <i class="fa-solid fa-stethoscope"></i>
             <span>Diagnosticar e Aplicar Patch Automático</span>
           </button>
-
-          <!-- Healing Result -->
           <div id="healing-result-box" class="pt-4 border-t border-slate-800 hidden space-y-3">
             <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 font-mono text-xs space-y-2" id="healing-result-content"></div>
           </div>
@@ -438,11 +679,11 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 7: PLANOS & PRECIFICAÇÃO -->
+      <!-- VIEW 10: PLANOS & COTAS -->
       <!-- ==================================================================== -->
       <section id="view-plans" class="space-y-6 hidden">
         <div class="text-center max-w-xl mx-auto">
-          <span class="text-xs font-bold uppercase tracking-wider text-cyan-400 mb-1 block">Tokens Ilimitados em Todos os Planos</span>
+          <span class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-1 block">Tokens Ilimitados em Todos os Planos</span>
           <h2 class="text-3xl font-extrabold text-white mb-3">Escolha o Plano Ideal para seu Negócio</h2>
           <p class="text-slate-400 text-sm">Alterne entre faturamento mensal e anual com 20% de desconto.</p>
         </div>
@@ -467,12 +708,12 @@
           </div>
 
           <!-- Pro -->
-          <div class="p-6 rounded-2xl bg-slate-900 border border-cyan-500/50 flex flex-col justify-between relative glow-cyan">
-            <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-cyan-500 text-slate-950 text-[10px] font-black uppercase tracking-wider">Mais Popular</span>
+          <div class="p-6 rounded-2xl bg-slate-900 border border-purple-500/50 flex flex-col justify-between relative shadow-lg shadow-purple-500/10">
+            <span class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-purple-500 text-white text-[10px] font-black uppercase tracking-wider">Mais Popular</span>
             <div>
               <h3 class="text-lg font-bold text-white mb-1">Plano Pro</h3>
               <p class="text-xs text-slate-400 mb-4">Para criadores e desenvolvedores.</p>
-              <div class="text-3xl font-black text-cyan-400 mb-4">R$ 197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <div class="text-3xl font-black text-purple-400 mb-4">R$ 197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
               <ul class="text-xs text-slate-300 space-y-2 mb-6">
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>15x mais potente</strong></li>
@@ -481,17 +722,17 @@
                 <li>✓ 10 Webhooks n8n</li>
               </ul>
             </div>
-            <button onclick="upgradePlan('pro')" class="w-full py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-xs font-bold text-slate-950 transition-colors">
+            <button onclick="upgradePlan('pro')" class="w-full py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-xs font-bold text-white transition-colors">
               Ativar Plano Pro
             </button>
           </div>
 
           <!-- Ultra -->
-          <div class="p-6 rounded-2xl bg-slate-900 border border-violet-500/50 flex flex-col justify-between glow-violet">
+          <div class="p-6 rounded-2xl bg-slate-900 border border-indigo-500/50 flex flex-col justify-between">
             <div>
               <h3 class="text-lg font-bold text-white mb-1">Plano Ultra</h3>
               <p class="text-xs text-slate-400 mb-4">Para agências e pequenas empresas.</p>
-              <div class="text-3xl font-black text-violet-400 mb-4">R$ 697<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <div class="text-3xl font-black text-indigo-400 mb-4">R$ 697<span class="text-xs text-slate-400 font-normal">/mês</span></div>
               <ul class="text-xs text-slate-300 space-y-2 mb-6">
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>30x mais potente</strong></li>
@@ -500,17 +741,20 @@
                 <li>✓ 50 Webhooks n8n</li>
               </ul>
             </div>
-            <button onclick="upgradePlan('ultra')" class="w-full py-2.5 rounded-xl bg-violet-600 hover:bg-violet-500 text-xs font-bold text-white transition-colors">
+            <button onclick="upgradePlan('ultra')" class="w-full py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition-colors">
               Ativar Plano Ultra
             </button>
           </div>
 
           <!-- Galaxi -->
-          <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-amber-950/20 border border-amber-500/40 flex flex-col justify-between">
+          <div class="p-6 rounded-2xl bg-gradient-to-b from-slate-900 to-purple-950/40 border border-purple-400/50 flex flex-col justify-between">
             <div>
-              <h3 class="text-lg font-bold text-amber-400 mb-1">Plano Galaxi</h3>
-              <p class="text-xs text-slate-400 mb-4">Potência máxima enterprise.</p>
-              <div class="text-3xl font-black text-amber-400 mb-4">R$ 1.197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
+              <h3 class="text-lg font-bold text-purple-300 mb-1 flex items-center gap-1.5">
+                <img src="/assets/logo.png" class="w-5 h-5 object-contain">
+                <span>Plano Galaxi</span>
+              </h3>
+              <p class="text-xs text-slate-400 mb-4">Potência máxima enterprise VIP.</p>
+              <div class="text-3xl font-black text-purple-300 mb-4">R$ 1.197<span class="text-xs text-slate-400 font-normal">/mês</span></div>
               <ul class="text-xs text-slate-300 space-y-2 mb-6">
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>Potência Máxima Galaxi</strong></li>
@@ -519,7 +763,7 @@
                 <li>✓ Webhooks n8n Ilimitados</li>
               </ul>
             </div>
-            <button onclick="upgradePlan('galaxi')" class="w-full py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-xs font-bold text-slate-950 transition-colors">
+            <button onclick="upgradePlan('galaxi')" class="w-full py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 hover:opacity-90 text-xs font-bold text-white transition-colors">
               Ativar Plano Galaxi
             </button>
           </div>
@@ -527,7 +771,7 @@
       </section>
 
       <!-- ==================================================================== -->
-      <!-- VIEW 8: PAINEL ADMIN -->
+      <!-- VIEW 11: PAINEL ADMIN -->
       <!-- ==================================================================== -->
       <section id="view-admin" class="space-y-6 hidden">
         <div>
@@ -549,16 +793,17 @@
   <!-- JAVASCRIPT REATIVO -->
   <script>
     let currentPreviewHtml = '';
+    let currentCarouselSlides = [];
+    let currentSlideIndex = 0;
 
-    // Navegação entre abas
     function navigate(viewId) {
-      const views = ['dashboard', 'whatsapp-sites', 'studio', 'microsaas', 'media-studio', 'n8n-automations', 'self-healing', 'plans', 'admin'];
+      const views = ['dashboard', 'whatsapp-sites', 'characters', 'carousels', 'studio', 'microsaas', 'media-studio', 'n8n-automations', 'self-healing', 'plans', 'profile', 'admin'];
       views.forEach(v => {
         const el = document.getElementById(`view-${v}`);
         const navBtn = document.getElementById(`nav-${v}`);
         if (el) el.classList.add('hidden');
         if (navBtn) {
-          navBtn.classList.remove('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+          navBtn.classList.remove('text-purple-400', 'bg-purple-500/10', 'border', 'border-purple-500/20');
           navBtn.classList.add('text-slate-400');
         }
       });
@@ -567,27 +812,201 @@
       const activeNav = document.getElementById(`nav-${viewId}`);
       if (target) target.classList.remove('hidden');
       if (activeNav) {
-        activeNav.classList.add('text-cyan-400', 'bg-cyan-500/10', 'border', 'border-cyan-500/20');
+        activeNav.classList.add('text-purple-400', 'bg-purple-500/10', 'border', 'border-purple-500/20');
         activeNav.classList.remove('text-slate-400');
       }
 
       const titles = {
         'dashboard': 'Dashboard Geral',
         'whatsapp-sites': 'Sites para WhatsApp',
+        'characters': 'Fábrica de Personagens por IA',
+        'carousels': 'Carrosséis Sociais Interativos',
         'studio': 'Studio Multi-Agentes',
         'microsaas': 'Micro-SaaS & Empresas',
         'media-studio': 'Vídeos, Shorts & Reels',
         'n8n-automations': 'Central de Automações n8n',
         'self-healing': 'Console de Autocorreção',
         'plans': 'Planos & Faturamento',
+        'profile': 'Configurações do Perfil & Temas',
         'admin': 'Painel Administrativo'
       };
       document.getElementById('view-title').innerText = titles[viewId] || 'Moura.ai';
 
+      if (viewId === 'characters') loadCharacters();
       if (viewId === 'admin') loadAdminLogs();
     }
 
-    // Gerador de Site para WhatsApp
+    // Gerador de Personagem
+    async function createCharacter() {
+      const btn = document.getElementById('btn-create-char');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Criando Personagem...';
+      btn.disabled = true;
+
+      const body = {
+        name: document.getElementById('char-input-name').value,
+        archetype: document.getElementById('char-input-archetype').value,
+        voiceTone: document.getElementById('char-input-voice').value,
+        backstoryInput: document.getElementById('char-input-backstory').value,
+        contentRating: document.getElementById('profile-rating') ? document.getElementById('profile-rating').value : 'sem_filtro'
+      };
+
+      try {
+        const res = await fetch('/api/characters/generate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await res.json();
+        if (data.character) {
+          alert(`Personagem ${data.character.name} criado com sucesso!`);
+          loadCharacters();
+        } else if (data.error) {
+          alert(data.error);
+        }
+      } catch (err) {
+        alert('Erro ao criar personagem');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Ficha Completa do Personagem';
+        btn.disabled = false;
+      }
+    }
+
+    async function loadCharacters() {
+      try {
+        const res = await fetch('/api/characters');
+        const data = await res.json();
+        const list = document.getElementById('characters-list');
+        list.innerHTML = '';
+
+        if (!data.characters || data.characters.length === 0) {
+          list.innerHTML = '<p class="text-xs text-slate-500">Nenhum personagem criado ainda.</p>';
+          return;
+        }
+
+        data.characters.forEach(c => {
+          const card = document.createElement('div');
+          card.className = 'p-5 rounded-2xl bg-slate-900 border border-slate-800 space-y-3';
+          card.innerHTML = `
+            <div class="flex items-center justify-between">
+              <div>
+                <h4 class="text-base font-bold text-white flex items-center gap-2">
+                  <span>${c.name}</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">${c.archetype}</span>
+                </h4>
+                <p class="text-xs text-purple-400/80 font-medium mt-0.5">Tom: ${c.voiceTone}</p>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-400 uppercase">${c.contentRating || 'Livre'}</span>
+            </div>
+            <p class="text-xs text-slate-300 leading-relaxed">${c.backstory}</p>
+            <div class="p-3 rounded-xl bg-slate-950 border border-slate-800 text-[11px] font-mono text-purple-300 space-y-1">
+              <span class="text-slate-500 block">Prompt de Imagem (Avatar):</span>
+              <p class="select-all">${c.promptImage}</p>
+            </div>
+            <div class="flex justify-end gap-2">
+              <button onclick="navigator.clipboard.writeText('${c.systemPrompt.replace(/'/g, "\\'")}'); alert('Prompt de Chatbot copiado!');" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition-colors flex items-center gap-1.5">
+                <i class="fa-solid fa-copy text-purple-400"></i>
+                <span>Copiar Prompt para Chatbot</span>
+              </button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+      } catch (_) {}
+    }
+
+    // Gerador de Carrossel Interativo
+    async function generateInteractiveCarousel() {
+      const title = document.getElementById('carousel-input-title').value;
+      const niche = document.getElementById('carousel-input-niche').value;
+      const btn = document.getElementById('btn-gen-carousel');
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Slides...';
+      btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/media/carousel', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, niche })
+        });
+        const data = await res.json();
+
+        if (data.carousel && data.carousel.slides) {
+          currentCarouselSlides = data.carousel.slides;
+          currentSlideIndex = 0;
+          document.getElementById('carousel-viewer-container').classList.remove('hidden');
+          renderSlide();
+        }
+      } catch (err) {
+        alert('Erro ao gerar carrossel');
+      } finally {
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Carrossel com 5 Slides';
+        btn.disabled = false;
+      }
+    }
+
+    function renderSlide() {
+      if (!currentCarouselSlides || currentCarouselSlides.length === 0) return;
+      const slide = currentCarouselSlides[currentSlideIndex];
+      document.getElementById('carousel-slide-indicator').innerText = `Slide ${currentSlideIndex + 1} de ${currentCarouselSlides.length}`;
+      document.getElementById('slide-badge').innerText = currentSlideIndex === 0 ? 'CAPA DO POST' : currentSlideIndex === currentCarouselSlides.length - 1 ? 'CHAMADA PARA AÇÃO (CTA)' : `PASSO ${currentSlideIndex}`;
+      document.getElementById('slide-title').innerText = slide.title;
+      document.getElementById('slide-subtitle').innerText = slide.subtitle;
+    }
+
+    function prevSlide() {
+      if (currentSlideIndex > 0) {
+        currentSlideIndex--;
+        renderSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlideIndex < currentCarouselSlides.length - 1) {
+        currentSlideIndex++;
+        renderSlide();
+      }
+    }
+
+    // Configurações do Perfil e Temas
+    function applyTheme(themeName) {
+      const body = document.getElementById('app-body');
+      body.classList.remove('theme-purple', 'theme-blue', 'theme-light', 'theme-emerald');
+
+      if (themeName === 'cosmic_purple') body.classList.add('theme-purple');
+      else if (themeName === 'cosmic_blue') body.classList.add('theme-blue');
+      else if (themeName === 'light') body.classList.add('theme-light');
+      else if (themeName === 'cyber_emerald') body.classList.add('theme-emerald');
+    }
+
+    async function saveProfileSettings() {
+      const name = document.getElementById('profile-name').value;
+      const birthDate = document.getElementById('profile-dob').value;
+      const contentRating = document.getElementById('profile-rating').value;
+      const imageVerificationEnabled = document.getElementById('profile-image-guard').checked;
+
+      try {
+        const res = await fetch('/api/user/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name,
+            birthDate,
+            theme: 'cosmic_purple',
+            contentRating,
+            imageVerificationEnabled
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Configurações salvas com sucesso!');
+          document.getElementById('user-name-display').innerText = name;
+        }
+      } catch (err) {
+        alert('Erro ao salvar perfil');
+      }
+    }
+
+    // WhatsApp Site Builder
     async function generateWhatsAppSite() {
       const btn = document.getElementById('btn-gen-wa');
       btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Gerando Site...';
@@ -612,11 +1031,9 @@
           currentPreviewHtml = data.previewHtml;
           const iframe = document.getElementById('wa-sandbox-iframe');
           iframe.srcdoc = data.previewHtml;
-        } else if (data.error) {
-          alert(data.error);
         }
       } catch (err) {
-        alert('Erro ao conectar com a API Moura.ai');
+        alert('Erro ao conectar com a API');
       } finally {
         btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> Gerar Site para WhatsApp com 1 Clique';
         btn.disabled = false;
@@ -635,7 +1052,7 @@
       w.document.write(currentPreviewHtml);
     }
 
-    // Orquestrador de Agentes
+    // Agentes Orchestrator
     async function runOrchestrator() {
       const btn = document.getElementById('btn-run-agents');
       const objective = document.getElementById('agent-input-objective').value;
@@ -661,7 +1078,7 @@
             item.className = 'p-4 rounded-xl bg-slate-950 border border-slate-800';
             item.innerHTML = `
               <div class="flex items-center justify-between mb-2">
-                <span class="text-xs font-bold text-cyan-400">${s.agentName} — ${s.role}</span>
+                <span class="text-xs font-bold text-purple-400">${s.agentName} — ${s.role}</span>
                 <span class="text-[10px] text-slate-500">${s.durationMs}ms</span>
               </div>
               <p class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${s.output}</p>
@@ -677,7 +1094,7 @@
       }
     }
 
-    // Gerador de Reels
+    // Reels Generator
     async function generateViralReels() {
       const topic = document.getElementById('reels-topic').value;
       const niche = document.getElementById('reels-niche').value;
@@ -722,7 +1139,7 @@
       }
     }
 
-    // Autocorreção Diagnostics
+    // Self-Healing
     async function runSelfHealingDiagnostics() {
       const code = document.getElementById('healing-code-input').value;
       const btn = document.getElementById('btn-run-healing');
@@ -746,7 +1163,7 @@
           <div class="text-slate-400">Erro Identificado: <span class="text-rose-400">${data.diagnostic.description || 'Nenhum'}</span></div>
           <div class="text-slate-400">Diagnóstico: <span class="text-amber-400">${data.diagnostic.suggestedFix || 'OK'}</span></div>
           <div class="text-slate-400">Re-teste Automatizado: <span class="text-emerald-400">${data.retestStatus === 'passed' ? 'Aprovado 100%' : 'Falhou'}</span></div>
-          <div class="text-slate-400">Log de Auditoria ID: <span class="text-cyan-400">${data.logId}</span></div>
+          <div class="text-slate-400">Log de Auditoria ID: <span class="text-purple-400">${data.logId}</span></div>
           <div class="mt-2 text-slate-300 font-bold">Código com Patch Aplicado:</div>
           <pre class="bg-slate-900 p-2 rounded text-emerald-300 overflow-x-auto">${data.diagnostic.fixedCode || code}</pre>
         `;
@@ -758,7 +1175,6 @@
       }
     }
 
-    // Upgrade Plan
     async function upgradePlan(planId) {
       try {
         const res = await fetch('/api/plans/upgrade', {
@@ -776,7 +1192,6 @@
       }
     }
 
-    // Test Webhook Trigger
     async function testWebhookTrigger(eventName) {
       try {
         const res = await fetch('/api/n8n/trigger', {
@@ -791,7 +1206,6 @@
       }
     }
 
-    // Load Admin Logs
     async function loadAdminLogs() {
       try {
         const res = await fetch('/api/admin/metrics');
@@ -802,7 +1216,7 @@
           const item = document.createElement('div');
           item.className = 'p-2.5 rounded-lg bg-slate-950 border border-slate-800 flex justify-between';
           item.innerHTML = `
-            <span><strong class="text-cyan-400">[${l.category.toUpperCase()}]</strong> ${l.action}</span>
+            <span><strong class="text-purple-400">[${l.category.toUpperCase()}]</strong> ${l.action}</span>
             <span class="text-slate-500">${new Date(l.createdAt).toLocaleTimeString()}</span>
           `;
           list.appendChild(item);
@@ -810,12 +1224,8 @@
       } catch (_) {}
     }
 
-    function toggleDarkMode() {
-      document.documentElement.classList.toggle('dark');
-    }
-
-    // Executa preview inicial automático
     window.addEventListener('DOMContentLoaded', () => {
+      applyTheme('cosmic_purple');
       generateWhatsAppSite();
     });
   </script>

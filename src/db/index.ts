@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
 import { v4 as uuidv4 } from 'uuid';
-import { User, DailyUsage, Project, CustomAgent, SelfHealingLog, AuditLog, N8NWebhook } from '../models/index.js';
+import { User, DailyUsage, Project, CustomAgent, SelfHealingLog, AuditLog, N8NWebhook, Character } from '../models/index.js';
 import { CONFIG } from '../config/index.js';
 
 interface DatabaseSchema {
@@ -10,6 +10,7 @@ interface DatabaseSchema {
   dailyUsage: DailyUsage[];
   projects: Project[];
   agents: CustomAgent[];
+  characters: Character[];
   selfHealingLogs: SelfHealingLog[];
   auditLogs: AuditLog[];
   n8nWebhooks: N8NWebhook[];
@@ -34,7 +35,9 @@ class DatabaseService {
     if (fs.existsSync(this.dbPath)) {
       try {
         const raw = fs.readFileSync(this.dbPath, 'utf-8');
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        if (!parsed.characters) parsed.characters = [];
+        return parsed;
       } catch (err) {
         console.warn('Erro ao carregar banco de dados, inicializando nova base limpa.', err);
       }
@@ -44,6 +47,7 @@ class DatabaseService {
       dailyUsage: [],
       projects: [],
       agents: [],
+      characters: [],
       selfHealingLogs: [],
       auditLogs: [],
       n8nWebhooks: []
@@ -69,7 +73,6 @@ class DatabaseService {
     if (this.data.users.length === 0) {
       const salt = bcrypt.genSaltSync(10);
       
-      // Admin padrão (Mouras-World)
       const adminUser: User = {
         id: uuidv4(),
         name: 'Gabriel Moura (Admin)',
@@ -78,10 +81,13 @@ class DatabaseService {
         role: 'admin',
         planId: 'galaxi',
         organizationId: 'org_mouras_world',
+        birthDate: '15/08/1998',
+        theme: 'cosmic_purple',
+        contentRating: 'sem_filtro',
+        imageVerificationEnabled: true,
         createdAt: new Date().toISOString()
       };
 
-      // Usuário Demonstração (Plano Pro)
       const demoUser: User = {
         id: uuidv4(),
         name: 'Empreendedor Pro Demo',
@@ -90,40 +96,24 @@ class DatabaseService {
         role: 'creator',
         planId: 'pro',
         organizationId: 'org_demo_lab',
+        birthDate: '20/04/2000',
+        theme: 'cosmic_purple',
+        contentRating: '18',
+        imageVerificationEnabled: true,
         createdAt: new Date().toISOString()
       };
 
       this.data.users.push(adminUser, demoUser);
 
-      // Seed Agentes Especializados Padrão da Moura.ai
-      const defaultAgents: CustomAgent[] = [
+      // Seed Agentes Especializados
+      this.data.agents.push(
         {
           id: uuidv4(),
           userId: adminUser.id,
           name: 'Moura SDR — Vendas & WhatsApp',
           specialty: 'vendas_sdr',
-          systemPrompt: 'Você é um especialista em conversão e vendas no WhatsApp. Aborda o cliente com empatia, descobre necessidades, contorna objeções com segurança e conduz ao fechamento com link direto.',
-          tools: ['wa_link_generator', 'faq_kb', 'checkout_bridge'],
-          status: 'active',
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: uuidv4(),
-          userId: adminUser.id,
-          name: 'Moura SAC — Suporte & Triagem',
-          specialty: 'atendimento_sac',
-          systemPrompt: 'Você é o agente de suporte inteligente. Resolve dúvidas instantaneamente, consulta pedidos e escalona chamados complexos para atendimento humano com resumo estruturado.',
-          tools: ['ticket_creator', 'order_status', 'sentiment_analyzer'],
-          status: 'active',
-          createdAt: new Date().toISOString()
-        },
-        {
-          id: uuidv4(),
-          userId: adminUser.id,
-          name: 'Moura Imóveis — Consultor Imobiliário',
-          specialty: 'imobiliario',
-          systemPrompt: 'Você é o consultor de imóveis de alta performance. Identifica localização, orçamento, número de quartos e agenda visitas no WhatsApp dos corretores.',
-          tools: ['property_catalog', 'schedule_calendar', 'lead_scorer'],
+          systemPrompt: 'Você é um especialista em conversão e vendas no WhatsApp. Aborda o cliente com empatia e conduz ao fechamento.',
+          tools: ['wa_link_generator', 'faq_kb'],
           status: 'active',
           createdAt: new Date().toISOString()
         },
@@ -132,32 +122,63 @@ class DatabaseService {
           userId: adminUser.id,
           name: 'Moura Dev — Engenheiro Full-Stack',
           specialty: 'software_dev',
-          systemPrompt: 'Você é o arquiteto e desenvolvedor sênior. Escreve código limpo, cria Micro-SaaS, analisa erros, gera testes automatizados e executa patches de autocorreção.',
-          tools: ['code_sandbox', 'test_runner', 'git_automator'],
+          systemPrompt: 'Você é o arquiteto e desenvolvedor sênior da Moura.ai.',
+          tools: ['code_sandbox', 'test_runner'],
           status: 'active',
           createdAt: new Date().toISOString()
         }
-      ];
+      );
 
-      this.data.agents.push(...defaultAgents);
+      // Seed Personagens por IA
+      this.data.characters.push(
+        {
+          id: uuidv4(),
+          userId: adminUser.id,
+          name: 'Saturnia — Guardiã dos Anéis Cósmicos',
+          archetype: 'Guardiã Cósmica & Mentora de IA',
+          voiceTone: 'Enigmática, profunda, inspiradora e sábia',
+          backstory: 'Nascida nos anéis de poeira cósmica do planeta violeta central de Moura.ai. Possui a sabedoria acumulada de milhões de civilizações estelares e guia criadores no universo digital.',
+          promptImage: 'Cosmic goddess with glowing violet aura, intricate star-dust halo, galaxy eyes, dark obsidian nebula background, cinematic 8k, photorealistic art.',
+          systemPrompt: 'Você é Saturnia, a guardiã do universo Moura.ai. Fale sempre com elegância cósmica, oferecendo insights que expandem a visão do usuário além do convencional.',
+          contentRating: 'livre',
+          createdAt: new Date().toISOString()
+        },
+        {
+          id: uuidv4(),
+          userId: adminUser.id,
+          name: 'Vortex — O Estrategista Cyberpunk',
+          archetype: 'Hacker & Negociador Subterrâneo',
+          voiceTone: 'Direto, perspicaz, sarcástico e hiper-inteligente',
+          backstory: 'Um operador de dados de alta performance que conhece todos os atalhos para monetização e crescimento viral na rede.',
+          promptImage: 'Cyberpunk strategist in obsidian trench coat, neon violet and cyan cybernetic implants, holographic screens floating around him, ultra-detailed 8k.',
+          systemPrompt: 'Você é Vortex. Seja cirúrgico nas suas análises de negócios, sem rodeios ou enrolações.',
+          contentRating: '16',
+          createdAt: new Date().toISOString()
+        }
+      );
 
-      // Seed Webhook n8n inicial
-      this.data.n8nWebhooks.push({
-        id: uuidv4(),
-        userId: adminUser.id,
-        name: 'Disparador de Leads WhatsApp para n8n',
-        triggerEvent: 'whatsapp_lead_received',
-        targetUrl: CONFIG.N8N_WEBHOOK_URL,
-        secretToken: CONFIG.N8N_SECRET_TOKEN,
-        status: 'active',
-        createdAt: new Date().toISOString()
-      });
-
+      this.persist();
+    } else {
+      // Garante que o usuário admin e demo tenham os campos de perfil
+      const admin = this.data.users.find(u => u.email === 'admin@moura.ai');
+      if (admin && !admin.theme) {
+        admin.theme = 'cosmic_purple';
+        admin.birthDate = '15/08/1998';
+        admin.contentRating = 'sem_filtro';
+        admin.imageVerificationEnabled = true;
+      }
+      const demo = this.data.users.find(u => u.email === 'demo@moura.ai');
+      if (demo && !demo.theme) {
+        demo.theme = 'cosmic_purple';
+        demo.birthDate = '20/04/2000';
+        demo.contentRating = '18';
+        demo.imageVerificationEnabled = true;
+      }
       this.persist();
     }
   }
 
-  // --- MÉTODOS DE USUÁRIO ---
+  // --- MÉTODOS DE USUÁRIO E PERFIL ---
   public findUserByEmail(email: string): User | undefined {
     return this.data.users.find(u => u.email.toLowerCase() === email.toLowerCase());
   }
@@ -170,11 +191,28 @@ class DatabaseService {
     const newUser: User = {
       ...user,
       id: uuidv4(),
+      theme: user.theme || 'cosmic_purple',
+      contentRating: user.contentRating || '16',
+      imageVerificationEnabled: user.imageVerificationEnabled ?? true,
       createdAt: new Date().toISOString()
     };
     this.data.users.push(newUser);
     this.persist();
     return newUser;
+  }
+
+  public updateUserProfile(userId: string, updates: Partial<User>): User | undefined {
+    const user = this.findUserById(userId);
+    if (!user) return undefined;
+    if (updates.name) user.name = updates.name;
+    if (updates.birthDate) user.birthDate = updates.birthDate;
+    if (updates.theme) user.theme = updates.theme;
+    if (updates.contentRating) user.contentRating = updates.contentRating;
+    if (updates.imageVerificationEnabled !== undefined) {
+      user.imageVerificationEnabled = updates.imageVerificationEnabled;
+    }
+    this.persist();
+    return user;
   }
 
   public updateUserPlan(userId: string, planId: 'free' | 'pro' | 'ultra' | 'galaxi'): boolean {
@@ -187,6 +225,26 @@ class DatabaseService {
 
   public listUsers(): User[] {
     return this.data.users;
+  }
+
+  // --- MÉTODOS DE PERSONAGENS POR IA ---
+  public listCharactersByUser(userId: string): Character[] {
+    return this.data.characters.filter(c => c.userId === userId || c.userId === 'admin' || !c.userId);
+  }
+
+  public createCharacter(character: Omit<Character, 'id' | 'createdAt'>): Character {
+    const newChar: Character = {
+      ...character,
+      id: uuidv4(),
+      createdAt: new Date().toISOString()
+    };
+    this.data.characters.unshift(newChar);
+    this.persist();
+    return newChar;
+  }
+
+  public getCharacterById(id: string): Character | undefined {
+    return this.data.characters.find(c => c.id === id);
   }
 
   // --- MÉTODOS DE CONTROLE DIÁRIO E COTAS ---
@@ -284,14 +342,6 @@ class DatabaseService {
     return newProject;
   }
 
-  public updateProject(id: string, updates: Partial<Project>): Project | undefined {
-    const proj = this.getProjectById(id);
-    if (!proj) return undefined;
-    Object.assign(proj, updates, { updatedAt: new Date().toISOString() });
-    this.persist();
-    return proj;
-  }
-
   // --- MÉTODOS DE AGENTES ---
   public listAgentsByUser(userId: string): CustomAgent[] {
     return this.data.agents.filter(a => a.userId === userId || a.userId === 'admin');
@@ -308,7 +358,7 @@ class DatabaseService {
     return newAgent;
   }
 
-  // --- MÉTODOS DE AUTOCORREÇÃO (SELF-HEALING LOGS) ---
+  // --- MÉTODOS DE AUTOCORREÇÃO (SELF-HEALING) ---
   public logSelfHealing(log: Omit<SelfHealingLog, 'id' | 'createdAt'>): SelfHealingLog {
     const entry: SelfHealingLog = {
       ...log,

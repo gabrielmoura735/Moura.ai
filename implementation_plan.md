@@ -1,106 +1,85 @@
-# PLANO DE IMPLEMENTAÇÃO — MOURA.AI (ESTRATÉGIA DE PRECIFICAÇÃO E EXECUÇÃO)
-## Plataforma de IA Avançada, Autônoma, Criação de Produtos, Sites para WhatsApp, Micro-SaaS e Automação Global
+# PLANO DE IMPLEMENTAÇÃO — IDENTIDADE CÓSMICA, PERSONAGENS POR IA, CARROSSEIS & PERFIL AVANÇADO
+## Expansão de Recursos Criativos, Configurações de Temas e Política de Conteúdo da Moura.ai
 
-> **Documento Arquitetural, Estratégia Comercial e Plano de Execução**  
-> **Status:** Aguardando Aprovação Final do Usuário (Planning Mode)  
-> **Nome da IA / Marca:** **Moura.ai**  
-> **Organização:** Mouras-World  
-> **Repositório GitHub Alvo:** `gabrielmoura735/Moura.ai`
-
----
-
-## 1. Estratégia de Precificação Profissional Definida
-
-Para maximizar a conversão de vendas, o ticket médio e a receita recorrente mensal (MRR), estruturamos a precificação com base em psicologia de consumo SaaS consagrada (terminações em 97, âncoras de alto valor e planos anuais com 20% de desconto):
-
-### 1.1. Tabela Oficial de Planos da Moura.ai
-
-| Detalhes do Plano | Plano Grátis | Plano Pro (Criador & Dev) | Plano Ultra (Agências & PMEs) | Plano Galaxi (Enterprise) |
-| :--- | :--- | :--- | :--- | :--- |
-| **Valor Mensal** | **R$ 0** | **R$ 197 / mês** *(~R$ 6,50/dia)* | **R$ 697 / mês** *(~R$ 23/dia)* | **R$ 1.197 / mês** *(~R$ 39/dia)* |
-| **Valor Anual (20% OFF)** | **R$ 0** | **R$ 1.890 / ano** *(12x R$ 157)* | **R$ 6.690 / ano** *(12x R$ 557)* | **R$ 11.490 / ano** *(12x R$ 957)* |
-| **Tokens de IA** | **Ilimitado** | **Ilimitado** | **Ilimitado** | **Ilimitado** |
-| **Capacidade de IA** | Padrão | **15x Mais Potente** | **30x Mais Potente (Complexo)** | **Potência Máxima Galaxi** |
-| **Imagens de Alta Fidelidade** | Até 32 / dia | Até 32 / dia (HD) | Até 80 / dia (4K Ultra) | Até 200 / dia (Estúdio VIP) |
-| **Criação de Sites & Sites WhatsApp** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Criação de SaaS & Micro-SaaS** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Criação de Empresas Completas** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Vídeos, Shorts, Reels & Roteiros** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Pesquisas Avançadas de Mercado** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Agentes de IA Especializados** | Até 5 / dia | Até 32 / dia | Até 80 / dia | Até 200 / dia |
-| **Automações n8n & Webhooks** | 1 webhook | 10 webhooks ativos | 50 webhooks ativos | Ilimitado + Prioridade Zero |
-| **Configuração de Preços** | *Configurável* | *Editável no Painel Admin* | *Editável no Painel Admin* | *Editável no Painel Admin* |
-
-> **Nota Estratégica:** Todos esses valores estarão configurados no banco de dados e no arquivo de configuração da aplicação. Você poderá alterá-los a qualquer momento pelo Painel Administrativo ou pelo arquivo `.env` sem precisar mexer em nenhuma linha de código!
+> **Documento Arquitetural e Funcional**  
+> **Status:** Aguardando Aprovação do Usuário (Planning Mode)  
+> **Marca / Plataforma:** **Moura.ai** (Mouras-World)  
+> **Repositório GitHub:** `gabrielmoura735/Moura.ai`
 
 ---
 
-## 2. Visão Geral dos Módulos Funcionais da Moura.ai
+## 1. Visão Geral das Novas Funcionalidades Solicitadas
 
-1. **Frontend Premium Obsidian Cyber (Dark & Light Mode):**
-   - Design de classe mundial inspirado em ferramentas líderes globais.
-   - Alternância de temas instantânea, tipografia ultra legível, micro-interações elegantes.
-   - Navegação fluida: Dashboard, Studio Multi-Agente, Builder de Sites/WhatsApp, Fábrica de Micro-SaaS, Estúdio de Mídia (Reels/Shorts/Carrosséis), Central n8n, Console de Autocorreção e Planos.
+### 1.1. Integração da Logo Oficial Cósmica 🪐
+- Incorporar a imagem do planeta violeta com anéis enviada pelo usuário em `public/assets/logo.png`.
+- Configurar como favicon oficial da aba do navegador (`favicon.png`).
+- Integrar na Sidebar (menu lateral), Header e no topo do `README.md` do GitHub.
 
-2. **Módulo de Sites para WhatsApp (Ultra Conversão):**
-   - Criação de páginas de captura focadas em conversão no WhatsApp.
-   - Botão flutuante inteligente, links dinâmicos formatados (`wa.me`), catálogos com botão direto "Pedir no WhatsApp" e formulários de pré-qualificação.
+### 1.2. Fábrica de Personagens por IA (AI Character Studio) 🎭
+- Criação de personagens e avatares inteligentes com suporte a:
+  - **Nome e Arquétipo:** Herói, Mentor, Especialista Técnico, Parceiro Empático, Comediante, Vilão/Anti-herói, Personagem de Ficção/Anime, Mascote de Marca.
+  - **Tom de Voz & Estilo:** Informal, Épico, Sedutor, Técnico, Misterioso, Amigável.
+  - **História & Lore (Backstory):** Origem, motivações, segredos e universo onde vive.
+  - **Prompt de Imagem para Avatar:** Geração de descrição detalhada pronta para Midjourney, Flux, DALL-E e geradores de imagem da Moura.ai.
+  - **Exportação para Chatbot:** Formato pronto para importar em chatbots estilo Character.ai, WhatsApp ou agentes próprios da Moura.ai.
 
-3. **Fábrica de Agentes Especializados:**
-   - Agente SDR / Vendas.
-   - Agente Atendimento & Suporte SAC.
-   - Agente Imobiliário.
-   - Agente Clínicas e Consultórios.
-   - Agente Delivery & Restaurantes.
-   - Agente Desenvolvedor & Arquiteto de Software.
+### 1.3. Estúdio Interativo de Carrosséis para Redes Sociais 📱
+- Geração de carrosséis de 5 a 7 slides para Instagram e LinkedIn.
+- **Visualizador Slide por Slide:** O usuário navega entre os slides diretamente na interface, inspeciona o layout visual, copia os textos formatados e exporta o conteúdo.
+- Ganchos visuais para capa, slides de conteúdo denso e chamada final para engajamento (salvar/comentar/compartilhar).
 
-4. **Estúdio de Vídeos, Shorts, Reels & Carrosséis:**
-   - Roteiros virais (9:16) com ganchos de 3 segundos, timestamps e chamadas para ação.
-   - Gerador de carrosséis visuais e cards exportáveis.
-
-5. **Motor de Autocorreção (Self-Healing Loop - Seção 9 Obrigatória):**
-   - Ciclo fechado: Planejar → Executar → Testar → Detectar → Diagnosticar → Corrigir → Testar Novamente → Registrar Auditoria.
-
-6. **Pacote de Automações n8n (5 Workflows Prontos em JSON):**
-   - `lead_whatsapp_qualification_n8n.json`
-   - `viral_content_shorts_reels_pipeline.json`
-   - `microsaas_customer_onboarding.json`
-   - `self_healing_health_alert.json`
-   - `ai_agent_webhook_bridge.json`
-
-7. **Publicação no GitHub & CI/CD:**
-   - Criação automática do repositório `gabrielmoura735/Moura.ai` na sua conta do GitHub.
-   - Workflows de CI/CD para testes contínuos e integridade de automações.
-
----
-
-## 3. Fases de Execução Propostas
-
-1. **Fase 1: Preparação e Preservação de Dados Anteriores**  
-   Mover os arquivos do projeto anterior para a pasta isolada `legacy_oracao_365/`.
-2. **Fase 2: Fundação Backend, Banco de Dados e Motor de Cotas**  
-   Inicializar o projeto Node.js/TypeScript, SQLite em modo WAL, tabelas de usuários, planos com os preços definidos, controle diário de 5/32/80/200 gerações e tokens ilimitados.
-3. **Fase 3: Orquestrador de IA, Multi-Provider e Sites para WhatsApp**  
-   Implementar os serviços centrais com fallback automático, geração de sites para WhatsApp e gerador de Micro-SaaS.
-4. **Fase 4: Fábrica de Agentes Especializados e Estúdio de Vídeos/Reels**  
-   Implementar os agentes sob demanda e os geradores de scripts/storyboards.
-5. **Fase 5: Motor de Autocorreção (Self-Healing)**  
-   Implementar o ciclo de teste, diagnóstico de falhas, patch localizado e histórico de auditoria.
-6. **Fase 6: Interface Web Premium Completa**  
-   Desenvolver a aplicação SPA funcional, com todas as páginas, preview em sandbox ao vivo e troca de temas.
-7. **Fase 7: Pacote de Automações n8n**  
-   Criar os 5 arquivos JSON de automação e o manual de importação.
-8. **Fase 8: Bateria de Testes Automatizados**  
-   Executar testes unitários e de integração de todos os módulos.
-9. **Fase 9: Publicação no GitHub (`gabrielmoura735/Moura.ai`)**  
-   Criar o repositório oficial no GitHub via `gh`, subir todo o código com commits semânticos e configurar GitHub Actions.
-10. **Fase 10: Relatório Final de Conclusão**  
-    Apresentação das funcionalidades, manual de uso e próximos passos.
+### 1.4. Nova Aba de Configurações do Perfil do Usuário ⚙️
+- **Dados Pessoais:**
+  - Nome completo do usuário.
+  - Data de Nascimento no formato `dd/mm/aaaa`.
+  - Bio / Descrição do criador.
+- **Seletor de Temas do Sistema:**
+  - 🌙 **Escuro Obsidian** (Padrão)
+  - ☀️ **Claro Tech** (Clean)
+  - 🌌 **Lilás Cósmico / Galáctico** (Harmonizado com a Logo)
+  - 🌊 **Azul Cósmico Profundo**
+  - 🌿 **Esmeralda Cyber**
+- **Sistema de Classificação Indicativa de Conteúdo (Content Rating Filter):**
+  - Opções selecionáveis: **Livre**, **10**, **12**, **14**, **16**, **18** e **Sem Filtro (Criatividade Total)**.
+  - **Termo de Responsabilidade Ética:** Mensagem clara de que o usuário administra sua própria IA com responsabilidade. A criação de conteúdo adulto ou narrativas livres é permitida para chatbots e ficção pessoal, sendo estritamente proibido o uso indevido de imagens ou dados de pessoas reais (antidifamação e anti-deepfake não consensual).
+- **Toggle de Verificação de Imagem (Image Guard):**
+  - Opção para ativar ou desativar a verificação estrita de imagens ("para que o próprio usuário administre sua IA sob sua responsabilidade").
 
 ---
 
-## 4. Solicitação de Aprovação
+## 2. Arquitetura Técnica e Alterações Planejadas
 
-Com a precificação profissional definida e todos os módulos mapeados, estamos prontos para executar.
+### 2.1. Alterações no Banco de Dados (`src/models/index.ts` e `src/db/index.ts`)
+- Adicionar campos no perfil do usuário:
+  - `birthDate`: string (`dd/mm/aaaa`)
+  - `theme`: `'dark' | 'light' | 'cosmic_purple' | 'cosmic_blue' | 'cyber_emerald'`
+  - `contentRating`: `'livre' | '10' | '12' | '14' | '16' | '18' | 'sem_filtro'`
+  - `imageVerificationEnabled`: boolean
+- Criar modelo `Character`:
+  - `id, userId, name, archetype, voiceTone, backstory, promptImage, systemPrompt, contentRating, createdAt`
 
-**Você aprova a execução imediata deste plano para construirmos a Moura.ai e publicá-la no seu GitHub?**
+### 2.2. Alterações nas Rotas da API (`src/routes/api.ts`)
+- `POST /api/user/profile`: Atualiza dados do perfil (nome, data nascimento, tema, classificação, toggle de imagens).
+- `POST /api/characters/generate`: Gera personagem estruturado com IA (lore, tom de voz, prompt de imagem, prompt de chatbot).
+- `GET /api/characters`: Lista personagens do usuário.
+
+### 2.3. Alterações na Interface (`public/index.html`)
+- Inclusão da logo cósmica oficial na barra lateral e favicon.
+- Nova aba de navegação: **Personagens por IA** (`#view-characters`).
+- Nova aba de navegação: **Configurações do Perfil** (`#view-profile`).
+- Atualização do **Estúdio de Carrosséis** com visualizador interativo slide a slide.
+- Sistema de temas reativo em CSS que altera instantaneamente as cores da interface (Escuro, Claro, Lilás Cósmico, Azul e Esmeralda).
+
+### 2.4. Testes Automatizados (`tests/runner.ts`)
+- Testes para criação de personagens, validação de temas, classificação de conteúdo e persistência das configurações de perfil.
+
+### 2.5. Sincronização no GitHub
+- Commit e push automático para `gabrielmoura735/Moura.ai`.
+
+---
+
+## 3. Solicitação de Aprovação
+
+Conforme a regra do *Planning Mode*, nenhuma alteração de código foi realizada ainda.
+
+**Você aprova a execução deste plano para adicionarmos a logo oficial, a fábrica de personagens, os carrosséis interativos, as configurações de perfil com múltiplos temas e o controle de classificação indicativa com responsabilidade do usuário?**

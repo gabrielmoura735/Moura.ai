@@ -8,6 +8,7 @@ import { digitalBuilder } from '../services/builder/index.js';
 import { mediaService } from '../services/media/index.js';
 import { orchestrator } from '../services/agents/index.js';
 import { selfHealing } from '../services/self_healing/index.js';
+import { llmService } from '../services/llm/index.js';
 
 export const apiRouter = Router();
 
@@ -27,7 +28,7 @@ apiRouter.get('/health', (req, res) => {
 });
 
 // ==============================================================================
-// 2. AUTENTICAÇÃO E SESSÃO
+// 2. AUTENTICAÇÃO E PERFIL DO USUÁRIO
 // ==============================================================================
 apiRouter.post('/auth/login', (req, res) => {
   const { email, password } = req.body;
@@ -57,14 +58,18 @@ apiRouter.post('/auth/login', (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      planId: user.planId
+      planId: user.planId,
+      birthDate: user.birthDate || '',
+      theme: user.theme || 'cosmic_purple',
+      contentRating: user.contentRating || '16',
+      imageVerificationEnabled: user.imageVerificationEnabled ?? true
     },
     plan: CONFIG.PLANS[user.planId]
   });
 });
 
 apiRouter.post('/auth/register', (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, birthDate } = req.body;
   if (!name || !email || !password) {
     res.status(400).json({ error: 'Nome, email e senha são obrigatórios.' });
     return;
@@ -82,7 +87,11 @@ apiRouter.post('/auth/register', (req, res) => {
     passwordHash: bcrypt.hashSync(password, salt),
     role: 'creator',
     planId: 'free',
-    organizationId: `org_${Date.now()}`
+    organizationId: `org_${Date.now()}`,
+    birthDate: birthDate || '',
+    theme: 'cosmic_purple',
+    contentRating: '16',
+    imageVerificationEnabled: true
   });
 
   const token = jwt.sign(
@@ -100,7 +109,11 @@ apiRouter.post('/auth/register', (req, res) => {
       name: user.name,
       email: user.email,
       role: user.role,
-      planId: user.planId
+      planId: user.planId,
+      birthDate: user.birthDate,
+      theme: user.theme,
+      contentRating: user.contentRating,
+      imageVerificationEnabled: user.imageVerificationEnabled
     },
     plan: CONFIG.PLANS.free
   });
@@ -122,11 +135,47 @@ apiRouter.get('/auth/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
       name: user.name,
       email: user.email,
       role: user.role,
-      planId: user.planId
+      planId: user.planId,
+      birthDate: user.birthDate || '',
+      theme: user.theme || 'cosmic_purple',
+      contentRating: user.contentRating || '16',
+      imageVerificationEnabled: user.imageVerificationEnabled ?? true
     },
     plan,
     usage,
     tokensUnlimited: CONFIG.TOKENS_UNLIMITED
+  });
+});
+
+apiRouter.post('/user/profile', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const { name, birthDate, theme, contentRating, imageVerificationEnabled } = req.body;
+  const updated = DB.updateUserProfile(req.user!.id, {
+    name,
+    birthDate,
+    theme,
+    contentRating,
+    imageVerificationEnabled
+  });
+
+  if (!updated) {
+    res.status(404).json({ error: 'Usuário não encontrado.' });
+    return;
+  }
+
+  DB.logAudit(req.user!.id, 'profile_updated', 'profile', { theme, contentRating, imageVerificationEnabled });
+
+  res.json({
+    success: true,
+    message: 'Perfil e configurações atualizados com sucesso.',
+    user: {
+      id: updated.id,
+      name: updated.name,
+      email: updated.email,
+      birthDate: updated.birthDate,
+      theme: updated.theme,
+      contentRating: updated.contentRating,
+      imageVerificationEnabled: updated.imageVerificationEnabled
+    }
   });
 });
 
@@ -158,7 +207,77 @@ apiRouter.post('/plans/upgrade', authMiddleware, (req: AuthenticatedRequest, res
 });
 
 // ==============================================================================
-// 4. DIGITAL PRODUCT BUILDER (SITES WHATSAPP & MICRO-SAAS)
+// 4. FÁBRICA DE PERSONAGENS POR IA (AI CHARACTER STUDIO)
+// ==============================================================================
+apiRouter.get('/characters', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
+  const characters = DB.listCharactersByUser(req.user!.id);
+  res.json({ characters });
+});
+
+apiRouter.post('/characters/generate', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
+  const userId = req.user!.id;
+  const quota = DB.checkQuota(userId, 'agents');
+
+  if (!quota.allowed) {
+    res.status(429).json({
+      error: `Limite diário de criação de personagens/agentes atingido para o ${quota.planName}.`,
+      quota
+    });
+    return;
+  }
+
+  const { name, archetype, voiceTone, backstoryInput, contentRating } = req.body;
+  const charName = name || 'Aria Estelar';
+  const charArchetype = archetype || 'Guardiã da Sabedoria Cósmica';
+  const charVoice = voiceTone || 'Inspiradora, profunda e acolhedora';
+  const user = DB.findUserById(userId);
+  const rating = contentRating || user?.contentRating || '16';
+
+  const prompt = `Crie a ficha completa de um personagem de ficção / chatbot inteligente chamado "${charName}".
+Arquétipo: ${charArchetype}
+Tom de voz: ${charVoice}
+Ideia inicial: ${backstoryInput || 'Habitante dos reinos astrais de Moura.ai'}
+Classificação de conteúdo: ${rating}
+
+Gere em formato estruturado:
+1. Lore / História de Origem (3 parágrafos envolventes)
+2. Prompt detalhado em inglês para gerar o avatar visual em alta resolução (estilo fotorrealista/cinemático 8k)
+3. Prompt de sistema (instrução mestre) para o chatbot incorporar o personagem`;
+
+  const llmRes = await llmService.generate({
+    prompt,
+    systemPrompt: 'Você é o diretor de criação da Fábrica de Personagens por IA Moura.ai.',
+    category: 'agents'
+  });
+
+  const promptImage = `Cinematic portrait of ${charName}, ${charArchetype}, cosmic ethereal lighting, photorealistic 8k, bokeh, highly detailed.`;
+  const backstory = backstoryInput || `${charName} é uma inteligência autônoma com personalidade marcante, projetada para engajamento e diálogo imersivo no universo Moura.ai.`;
+  const systemPrompt = `Você é ${charName}, atuando como ${charArchetype}. Seu tom de voz é ${charVoice}. Responda sempre em primeira pessoa mantendo estrita fidelidade à sua personalidade.`;
+
+  const character = DB.createCharacter({
+    userId,
+    name: charName,
+    archetype: charArchetype,
+    voiceTone: charVoice,
+    backstory,
+    promptImage,
+    systemPrompt,
+    contentRating: rating
+  });
+
+  DB.incrementUsage(userId, 'agents', 2200);
+  DB.logAudit(userId, 'character_created', 'generation', { characterId: character.id });
+
+  res.json({
+    success: true,
+    character,
+    aiAnalysis: llmRes.text,
+    remainingDaily: quota.limit - (quota.current + 1)
+  });
+});
+
+// ==============================================================================
+// 5. DIGITAL PRODUCT BUILDER (SITES WHATSAPP & MICRO-SAAS)
 // ==============================================================================
 apiRouter.post('/builder/whatsapp-site', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
@@ -166,7 +285,7 @@ apiRouter.post('/builder/whatsapp-site', authMiddleware, (req: AuthenticatedRequ
 
   if (!quota.allowed) {
     res.status(429).json({
-      error: `Limite diário de criação de sites atingido para o ${quota.planName} (${quota.current}/${quota.limit}). Faça upgrade para o Plano Pro (32/dia), Ultra (80/dia) ou Galaxi (200/dia)!`,
+      error: `Limite diário de criação de sites atingido para o ${quota.planName} (${quota.current}/${quota.limit}).`,
       quota
     });
     return;
@@ -186,7 +305,6 @@ apiRouter.post('/builder/whatsapp-site', authMiddleware, (req: AuthenticatedRequ
     ]
   });
 
-  // Salva no banco de projetos
   const project = DB.createProject({
     userId,
     name: businessName || 'Site para WhatsApp',
@@ -215,7 +333,7 @@ apiRouter.post('/builder/microsaas', authMiddleware, (req: AuthenticatedRequest,
 
   if (!quota.allowed) {
     res.status(429).json({
-      error: `Limite diário de criação de Micro-SaaS atingido para o ${quota.planName} (${quota.current}/${quota.limit}). Faça upgrade para ter cotas de até 200/dia!`,
+      error: `Limite diário de criação de Micro-SaaS atingido para o ${quota.planName}.`,
       quota
     });
     return;
@@ -257,7 +375,7 @@ apiRouter.post('/builder/microsaas', authMiddleware, (req: AuthenticatedRequest,
 });
 
 // ==============================================================================
-// 5. ESTÚDIO DE MÍDIA (VÍDEOS, REELS, SHORTS & CARROSSEIS)
+// 6. ESTÚDIO DE MÍDIA (VÍDEOS, REELS & CARROSSEIS)
 // ==============================================================================
 apiRouter.post('/media/viral-script', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
@@ -265,7 +383,7 @@ apiRouter.post('/media/viral-script', authMiddleware, (req: AuthenticatedRequest
 
   if (!quota.allowed) {
     res.status(429).json({
-      error: `Limite diário de geração de roteiros de vídeos/reels atingido para o ${quota.planName} (${quota.current}/${quota.limit}).`,
+      error: `Limite diário de geração de roteiros de vídeos/reels atingido para o ${quota.planName}.`,
       quota
     });
     return;
@@ -294,7 +412,7 @@ apiRouter.post('/media/carousel', authMiddleware, (req: AuthenticatedRequest, re
 
   if (!quota.allowed) {
     res.status(429).json({
-      error: `Limite diário de imagens/carrosséis atingido para o ${quota.planName} (${quota.current}/${quota.limit}).`,
+      error: `Limite diário de imagens/carrosséis atingido para o ${quota.planName}.`,
       quota
     });
     return;
@@ -317,7 +435,7 @@ apiRouter.post('/media/carousel', authMiddleware, (req: AuthenticatedRequest, re
 });
 
 // ==============================================================================
-// 6. ORQUESTRADOR MULTI-AGENTE & AGENTES ESPECIALIZADOS
+// 7. ORQUESTRADOR MULTI-AGENTE & AUTOCORREÇÃO
 // ==============================================================================
 apiRouter.post('/agents/orchestrate', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
@@ -357,35 +475,6 @@ apiRouter.post('/agents/orchestrate', authMiddleware, async (req: AuthenticatedR
   }
 });
 
-apiRouter.get('/agents', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const agents = DB.listAgentsByUser(req.user!.id);
-  res.json({ agents });
-});
-
-apiRouter.post('/agents', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const { name, specialty, systemPrompt, tools } = req.body;
-  if (!name || !specialty || !systemPrompt) {
-    res.status(400).json({ error: 'Nome, especialidade e prompt do sistema são obrigatórios.' });
-    return;
-  }
-
-  const agent = DB.createAgent({
-    userId: req.user!.id,
-    name,
-    specialty,
-    systemPrompt,
-    tools: tools || ['wa_bridge', 'n8n_trigger'],
-    status: 'active'
-  });
-
-  DB.logAudit(req.user!.id, 'custom_agent_created', 'generation', { agentId: agent.id });
-
-  res.status(201).json({ success: true, agent });
-});
-
-// ==============================================================================
-// 7. CONSOLE DE AUTOCORREÇÃO (SELF-HEALING LOOP)
-// ==============================================================================
 apiRouter.post('/self-healing/diagnose', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
   const { code, language } = req.body;
   if (!code || !language) {
@@ -419,7 +508,6 @@ apiRouter.post('/n8n/trigger', authMiddleware, async (req: AuthenticatedRequest,
 
   DB.logAudit(req.user!.id, 'n8n_triggered', 'n8n_webhook', { eventName, payload });
 
-  // Tenta disparo HTTP real para a URL configurada se informada
   let externalStatus = 'simulated';
   if (CONFIG.N8N_WEBHOOK_URL) {
     try {
@@ -451,7 +539,6 @@ apiRouter.post('/n8n/trigger', authMiddleware, async (req: AuthenticatedRequest,
   });
 });
 
-// Endpoint seguro receptor de webhooks vindos do n8n
 apiRouter.post('/n8n/receiver', (req, res) => {
   const signature = req.headers['x-moura-signature'];
   if (signature !== CONFIG.N8N_SECRET_TOKEN) {
@@ -470,12 +557,13 @@ apiRouter.post('/n8n/receiver', (req, res) => {
 });
 
 // ==============================================================================
-// 9. PAINEL ADMINISTRATIVO PROTEGIDO
+// 9. PAINEL ADMIN
 // ==============================================================================
 apiRouter.get('/admin/metrics', authMiddleware, requireRole(['admin']), (req: AuthenticatedRequest, res: Response) => {
   const users = DB.listUsers();
   const auditLogs = DB.listAuditLogs();
   const selfHealingLogs = DB.listSelfHealingLogs();
+  const characters = DB.listCharactersByUser('admin');
 
   const totalTokens = users.reduce((acc, u) => {
     const usage = DB.getOrCreateTodayUsage(u.id);
@@ -492,20 +580,9 @@ apiRouter.get('/admin/metrics', authMiddleware, requireRole(['admin']), (req: Au
     },
     totalTokensConsumedToday: totalTokens,
     tokensPolicy: 'ILIMITADO PARA TODOS OS PLANOS',
+    totalCharactersCreated: characters.length,
     totalSelfHealingEvents: selfHealingLogs.length,
     recentAuditLogs: auditLogs.slice(0, 20),
     systemHealth: '100% Operacional'
   });
-});
-
-apiRouter.get('/admin/users', authMiddleware, requireRole(['admin']), (req: AuthenticatedRequest, res: Response) => {
-  const users = DB.listUsers().map(u => ({
-    id: u.id,
-    name: u.name,
-    email: u.email,
-    role: u.role,
-    planId: u.planId,
-    createdAt: u.createdAt
-  }));
-  res.json({ users });
 });
