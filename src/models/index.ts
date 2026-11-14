@@ -15,6 +15,9 @@ export interface User {
   theme?: SystemTheme;
   contentRating?: ContentRating;
   imageVerificationEnabled?: boolean;
+  nsfwEnabled?: boolean;
+  adultContentAcknowledged?: boolean;
+  unlimitedGenerationEnabled?: boolean;
   createdAt: string;
 }
 

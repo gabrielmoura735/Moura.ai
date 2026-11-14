@@ -13,6 +13,38 @@ import { promptEngineService } from '../services/prompts/index.js';
 
 export const apiRouter = Router();
 
+function calculateAge(birthDate?: string): number | null {
+  if (!birthDate) return null;
+  const match = birthDate.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+  if (!match) return null;
+  const birth = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+  if (Number.isNaN(birth.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - birth.getFullYear();
+  const beforeBirthday = now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate());
+  if (beforeBirthday) age -= 1;
+  return age >= 0 && age <= 130 ? age : null;
+}
+
+function publicUser(user: any) {
+  const birthDate = user.birthDate || '';
+  return {
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    planId: user.planId,
+    birthDate,
+    age: calculateAge(birthDate),
+    theme: user.theme || 'cosmic_purple',
+    contentRating: user.contentRating || '16',
+    imageVerificationEnabled: user.imageVerificationEnabled ?? true,
+    nsfwEnabled: user.nsfwEnabled ?? false,
+    adultContentAcknowledged: user.adultContentAcknowledged ?? false,
+    unlimitedGenerationEnabled: user.unlimitedGenerationEnabled ?? true
+  };
+}
+
 // ==============================================================================
 // 1. HEALTHCHECK & STATUS DO SISTEMA
 // ==============================================================================
@@ -22,6 +54,7 @@ apiRouter.get('/health', (req, res) => {
     system: 'Moura.ai Core Engine',
     version: '1.0.0',
     tokensUnlimited: CONFIG.TOKENS_UNLIMITED,
+    generationUnlimited: CONFIG.UNLIMITED_GENERATION,
     timestamp: new Date().toISOString(),
     github: CONFIG.GITHUB_REPO,
     activePlans: Object.keys(CONFIG.PLANS)
@@ -59,17 +92,7 @@ apiRouter.post('/auth/login', (req, res) => {
 
   res.json({
     token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      planId: user.planId,
-      birthDate: user.birthDate || '',
-      theme: user.theme || 'cosmic_purple',
-      contentRating: user.contentRating || '16',
-      imageVerificationEnabled: user.imageVerificationEnabled ?? true
-    },
+    user: publicUser(user),
     plan: CONFIG.PLANS[user.planId]
   });
 });
@@ -102,7 +125,10 @@ apiRouter.post('/auth/register', (req, res) => {
     birthDate: birthDate || '',
     theme: 'cosmic_purple',
     contentRating: '16',
-    imageVerificationEnabled: true
+    imageVerificationEnabled: true,
+    nsfwEnabled: false,
+    adultContentAcknowledged: false,
+    unlimitedGenerationEnabled: true
   });
 
   const token = jwt.sign(
@@ -115,17 +141,7 @@ apiRouter.post('/auth/register', (req, res) => {
 
   res.status(201).json({
     token,
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      planId: user.planId,
-      birthDate: user.birthDate,
-      theme: user.theme,
-      contentRating: user.contentRating,
-      imageVerificationEnabled: user.imageVerificationEnabled
-    },
+    user: publicUser(user),
     plan: CONFIG.PLANS.free
   });
 });
@@ -141,31 +157,30 @@ apiRouter.get('/auth/me', authMiddleware, (req: AuthenticatedRequest, res: Respo
   const plan = CONFIG.PLANS[user.planId] || CONFIG.PLANS.free;
 
   res.json({
-    user: {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      role: user.role,
-      planId: user.planId,
-      birthDate: user.birthDate || '',
-      theme: user.theme || 'cosmic_purple',
-      contentRating: user.contentRating || '16',
-      imageVerificationEnabled: user.imageVerificationEnabled ?? true
-    },
+    user: publicUser(user),
     plan,
     usage,
-    tokensUnlimited: CONFIG.TOKENS_UNLIMITED
+    tokensUnlimited: CONFIG.TOKENS_UNLIMITED,
+    generationUnlimited: CONFIG.UNLIMITED_GENERATION
   });
 });
 
 apiRouter.post('/user/profile', authMiddleware, (req: AuthenticatedRequest, res: Response) => {
-  const { name, birthDate, theme, contentRating, imageVerificationEnabled } = req.body;
+  const { name, birthDate, theme, contentRating, imageVerificationEnabled, nsfwEnabled, adultContentAcknowledged, unlimitedGenerationEnabled } = req.body;
+  const age = calculateAge(birthDate);
+  if (nsfwEnabled === true && (age === null || age < 18 || adultContentAcknowledged !== true)) {
+    res.status(400).json({ error: 'O conteúdo NSFW exige idade verificada de 18 anos ou mais e aceite de responsabilidade.' });
+    return;
+  }
   const updated = DB.updateUserProfile(req.user!.id, {
     name,
     birthDate,
     theme,
     contentRating,
-    imageVerificationEnabled
+    imageVerificationEnabled,
+    nsfwEnabled,
+    adultContentAcknowledged,
+    unlimitedGenerationEnabled
   });
 
   if (!updated) {
@@ -179,13 +194,7 @@ apiRouter.post('/user/profile', authMiddleware, (req: AuthenticatedRequest, res:
     success: true,
     message: 'Perfil e configurações atualizados com sucesso.',
     user: {
-      id: updated.id,
-      name: updated.name,
-      email: updated.email,
-      birthDate: updated.birthDate,
-      theme: updated.theme,
-      contentRating: updated.contentRating,
-      imageVerificationEnabled: updated.imageVerificationEnabled
+      ...publicUser(updated)
     }
   });
 });
@@ -283,7 +292,7 @@ Gere em formato estruturado:
     success: true,
     character,
     aiAnalysis: llmRes.text,
-    remainingDaily: quota.limit - (quota.current + 1)
+    remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
   });
 });
 
@@ -334,7 +343,7 @@ apiRouter.post('/builder/whatsapp-site', authMiddleware, (req: AuthenticatedRequ
     projectId: project.id,
     previewHtml: site.previewHtml,
     files: site.files,
-    remainingDaily: quota.limit - (quota.current + 1)
+    remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
   });
 });
 
@@ -381,7 +390,7 @@ apiRouter.post('/builder/microsaas', authMiddleware, (req: AuthenticatedRequest,
     projectId: project.id,
     previewHtml: saas.previewHtml,
     files: saas.files,
-    remainingDaily: quota.limit - (quota.current + 1)
+    remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
   });
 });
 
@@ -390,6 +399,7 @@ apiRouter.post('/builder/microsaas', authMiddleware, (req: AuthenticatedRequest,
 // ==============================================================================
 apiRouter.post('/media/generate-image', authMiddleware, async (req: AuthenticatedRequest, res: Response) => {
   const userId = req.user!.id;
+  const user = DB.findUserById(userId);
   const quota = DB.checkQuota(userId, 'images');
 
   if (!quota.allowed) {
@@ -403,6 +413,12 @@ apiRouter.post('/media/generate-image', authMiddleware, async (req: Authenticate
   const { prompt, style, aspectRatio, creationMode } = req.body;
   if (!prompt) {
     res.status(400).json({ error: 'O prompt da imagem é obrigatório.' });
+    return;
+  }
+
+  const adultRequest = /\b(nsfw|nude|naked|explicit|porn|sexo|sexual|erotic|nu[aeo])\b/i.test(String(prompt));
+  if (adultRequest && !user?.nsfwEnabled) {
+    res.status(403).json({ error: 'Ative o modo NSFW nas Configurações e confirme que você tem 18 anos ou mais.' });
     return;
   }
 
@@ -420,7 +436,7 @@ apiRouter.post('/media/generate-image', authMiddleware, async (req: Authenticate
     res.json({
       success: true,
       image,
-      remainingDaily: quota.limit - (quota.current + 1)
+      remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
     });
   } catch (err: any) {
     res.status(500).json({ error: 'Erro ao gerar imagem: ' + err.message });
@@ -452,7 +468,7 @@ apiRouter.post('/media/viral-script', authMiddleware, (req: AuthenticatedRequest
   res.json({
     success: true,
     script,
-    remainingDaily: quota.limit - (quota.current + 1)
+    remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
   });
 });
 
@@ -480,7 +496,7 @@ apiRouter.post('/media/carousel', authMiddleware, (req: AuthenticatedRequest, re
   res.json({
     success: true,
     carousel,
-    remainingDaily: quota.limit - (quota.current + 1)
+    remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
   });
 });
 
@@ -556,7 +572,7 @@ apiRouter.post('/agents/orchestrate', authMiddleware, async (req: AuthenticatedR
     res.json({
       success: true,
       result,
-      remainingDaily: quota.limit - (quota.current + 1)
+      remainingDaily: quota.unlimitedGeneration ? 'unlimited' : quota.limit - (quota.current + 1)
     });
   } catch (err: any) {
     res.status(500).json({ error: 'Erro durante orquestração de agentes: ' + err.message });

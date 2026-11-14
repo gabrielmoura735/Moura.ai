@@ -85,6 +85,9 @@ class DatabaseService {
         theme: 'cosmic_purple',
         contentRating: 'sem_filtro',
         imageVerificationEnabled: true,
+        nsfwEnabled: true,
+        adultContentAcknowledged: true,
+        unlimitedGenerationEnabled: true,
         createdAt: new Date().toISOString()
       };
 
@@ -100,6 +103,9 @@ class DatabaseService {
         theme: 'cosmic_purple',
         contentRating: '18',
         imageVerificationEnabled: true,
+        nsfwEnabled: true,
+        adultContentAcknowledged: true,
+        unlimitedGenerationEnabled: true,
         createdAt: new Date().toISOString()
       };
 
@@ -166,6 +172,9 @@ class DatabaseService {
         admin.birthDate = '15/08/1998';
         admin.contentRating = 'sem_filtro';
         admin.imageVerificationEnabled = true;
+        admin.nsfwEnabled = admin.nsfwEnabled ?? true;
+        admin.adultContentAcknowledged = admin.adultContentAcknowledged ?? true;
+        admin.unlimitedGenerationEnabled = admin.unlimitedGenerationEnabled ?? true;
       }
       const demo = this.data.users.find(u => u.email === 'demo@moura.ai');
       if (demo && !demo.theme) {
@@ -173,6 +182,9 @@ class DatabaseService {
         demo.birthDate = '20/04/2000';
         demo.contentRating = '18';
         demo.imageVerificationEnabled = true;
+        demo.nsfwEnabled = demo.nsfwEnabled ?? true;
+        demo.adultContentAcknowledged = demo.adultContentAcknowledged ?? true;
+        demo.unlimitedGenerationEnabled = demo.unlimitedGenerationEnabled ?? true;
       }
       this.persist();
     }
@@ -194,6 +206,9 @@ class DatabaseService {
       theme: user.theme || 'cosmic_purple',
       contentRating: user.contentRating || '16',
       imageVerificationEnabled: user.imageVerificationEnabled ?? true,
+      nsfwEnabled: user.nsfwEnabled ?? false,
+      adultContentAcknowledged: user.adultContentAcknowledged ?? false,
+      unlimitedGenerationEnabled: user.unlimitedGenerationEnabled ?? true,
       createdAt: new Date().toISOString()
     };
     this.data.users.push(newUser);
@@ -211,6 +226,9 @@ class DatabaseService {
     if (updates.imageVerificationEnabled !== undefined) {
       user.imageVerificationEnabled = updates.imageVerificationEnabled;
     }
+    if (updates.nsfwEnabled !== undefined) user.nsfwEnabled = updates.nsfwEnabled;
+    if (updates.adultContentAcknowledged !== undefined) user.adultContentAcknowledged = updates.adultContentAcknowledged;
+    if (updates.unlimitedGenerationEnabled !== undefined) user.unlimitedGenerationEnabled = updates.unlimitedGenerationEnabled;
     this.persist();
     return user;
   }
@@ -281,13 +299,15 @@ class DatabaseService {
     limit: number;
     planName: string;
     unlimitedTokens: boolean;
+    unlimitedGeneration: boolean;
   } {
     const user = this.findUserById(userId);
     const planId = user ? user.planId : 'free';
     const plan = CONFIG.PLANS[planId] || CONFIG.PLANS.free;
     const usage = this.getOrCreateTodayUsage(userId);
 
-    const limit = category === 'images' ? plan.dailyImagesLimit : plan.dailyGenerationLimit;
+    const unlimited = CONFIG.UNLIMITED_GENERATION && user?.unlimitedGenerationEnabled !== false;
+    const limit = unlimited ? Number.MAX_SAFE_INTEGER : (category === 'images' ? plan.dailyImagesLimit : plan.dailyGenerationLimit);
 
     let current = 0;
     if (category === 'images') current = usage.imagesCount;
@@ -303,7 +323,8 @@ class DatabaseService {
       current,
       limit,
       planName: plan.name,
-      unlimitedTokens: CONFIG.TOKENS_UNLIMITED
+      unlimitedTokens: CONFIG.TOKENS_UNLIMITED,
+      unlimitedGeneration: unlimited
     };
   }
 

@@ -147,7 +147,7 @@
         </button>
         <button onclick="navigate('profile')" id="nav-profile" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-solid fa-user-gear w-5 text-center text-purple-400"></i>
-          <span>Perfil & Temas</span>
+          <span>Configurações</span>
         </button>
         <button onclick="navigate('admin')" id="nav-admin" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
           <i class="fa-solid fa-shield-halved w-5 text-center text-blue-400"></i>
@@ -241,7 +241,7 @@
               <span class="text-xs font-semibold">Cota Diária de Imagens</span>
               <i class="fa-solid fa-image text-pink-400"></i>
             </div>
-            <div class="text-2xl font-black text-white" id="dash-images-quota">0 / 200</div>
+            <div class="text-2xl font-black text-white" id="dash-images-quota">∞ / ∞</div>
             <div class="w-full bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
               <div class="bg-pink-500 h-full w-[2%]"></div>
             </div>
@@ -572,6 +572,16 @@
               <label class="block text-xs font-semibold text-slate-300 mb-1">Data de Nascimento (dd/mm/aaaa):</label>
               <input type="text" id="profile-dob" placeholder="15/08/1998" value="15/08/1998" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-white text-sm focus:border-purple-500 outline-none">
             </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Idade calculada</label>
+                <input type="text" id="profile-age" value="—" readonly class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-1">Conta</label>
+                <input type="text" id="profile-email" value="admin@moura.ai" readonly class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-400 text-sm">
+              </div>
+            </div>
 
             <div class="pt-4 border-t border-slate-800">
               <label class="block text-xs font-semibold text-slate-300 mb-2">Tema Visual da Plataforma:</label>
@@ -625,6 +635,28 @@
                 <span class="text-[11px] text-slate-400">Você administra sua própria IA. Desative se desejar processamento sem moderação.</span>
               </div>
               <input type="checkbox" id="profile-image-guard" checked class="w-5 h-5 accent-purple-500 rounded cursor-pointer">
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-950 border border-slate-800 space-y-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <span class="text-xs font-bold text-white block">Modo NSFW / adulto</span>
+                  <span class="text-[11px] text-slate-400">Disponível somente para usuários com 18 anos ou mais.</span>
+                </div>
+                <input type="checkbox" id="profile-nsfw" class="w-5 h-5 accent-rose-500 rounded cursor-pointer">
+              </div>
+              <label class="flex items-start gap-2 text-[11px] text-slate-400">
+                <input type="checkbox" id="profile-adult-ack" class="mt-0.5 accent-rose-500 rounded cursor-pointer">
+                <span>Confirmo que sou maior de 18 anos e não usarei a ferramenta para menores, pessoas reais sem consentimento ou material ilegal.</span>
+              </label>
+            </div>
+
+            <div class="p-4 rounded-xl bg-emerald-950/20 border border-emerald-500/30 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-bold text-white block">Geração ilimitada</span>
+                <span class="text-[11px] text-emerald-200/70">Imagens, vídeos, roteiros, sites e agentes sem cota diária local.</span>
+              </div>
+              <input type="checkbox" id="profile-unlimited" checked class="w-5 h-5 accent-emerald-500 rounded cursor-pointer">
             </div>
 
             <div class="p-4 rounded-xl bg-purple-950/20 border border-purple-500/30 text-xs text-purple-200 leading-relaxed">
@@ -887,7 +919,7 @@
               <ul class="text-xs text-slate-300 space-y-2 mb-6">
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ Até 5 criações/dia de cada</li>
-                <li>✓ Até 32 imagens/dia</li>
+                <li>✓ Imagens ilimitadas*</li>
                 <li>✓ 1 Webhook n8n</li>
               </ul>
             </div>
@@ -907,7 +939,7 @@
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>15x mais potente</strong></li>
                 <li>✓ Até 32 criações/dia de cada</li>
-                <li>✓ Até 32 imagens HD/dia</li>
+                <li>✓ Imagens HD ilimitadas*</li>
                 <li>✓ 10 Webhooks n8n</li>
               </ul>
             </div>
@@ -926,7 +958,7 @@
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>30x mais potente</strong></li>
                 <li>✓ Até 80 criações/dia de cada</li>
-                <li>✓ Até 80 imagens 4K/dia</li>
+                <li>✓ Imagens 4K ilimitadas*</li>
                 <li>✓ 50 Webhooks n8n</li>
               </ul>
             </div>
@@ -948,7 +980,7 @@
                 <li>✓ <strong>Tokens Ilimitados</strong></li>
                 <li>✓ <strong>Potência Máxima Galaxi</strong></li>
                 <li>✓ Até 200 criações/dia de cada</li>
-                <li>✓ Até 200 imagens estúdio/dia</li>
+                <li>✓ Imagens de estúdio ilimitadas*</li>
                 <li>✓ Webhooks n8n Ilimitados</li>
               </ul>
             </div>
@@ -1428,6 +1460,19 @@
     }
 
     // Configurações do Perfil e Temas
+    function updateProfileAge() {
+      const value = document.getElementById('profile-dob')?.value || '';
+      const match = value.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+      const ageField = document.getElementById('profile-age');
+      if (!ageField) return;
+      if (!match) { ageField.value = '—'; return; }
+      const birth = new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+      const now = new Date();
+      let age = now.getFullYear() - birth.getFullYear();
+      if (now.getMonth() < birth.getMonth() || (now.getMonth() === birth.getMonth() && now.getDate() < birth.getDate())) age--;
+      ageField.value = age >= 0 && age <= 130 ? `${age} anos` : '—';
+    }
+
     function applyTheme(themeName) {
       const body = document.getElementById('app-body');
       body.classList.remove('theme-purple', 'theme-blue', 'theme-light', 'theme-emerald');
@@ -1443,6 +1488,9 @@
       const birthDate = document.getElementById('profile-dob').value;
       const contentRating = document.getElementById('profile-rating').value;
       const imageVerificationEnabled = document.getElementById('profile-image-guard').checked;
+      const nsfwEnabled = document.getElementById('profile-nsfw').checked;
+      const adultContentAcknowledged = document.getElementById('profile-adult-ack').checked;
+      const unlimitedGenerationEnabled = document.getElementById('profile-unlimited').checked;
 
       try {
         const res = await fetch('/api/user/profile', {
@@ -1453,7 +1501,10 @@
             birthDate,
             theme: 'cosmic_purple',
             contentRating,
-            imageVerificationEnabled
+            imageVerificationEnabled,
+            nsfwEnabled,
+            adultContentAcknowledged,
+            unlimitedGenerationEnabled
           })
         });
         const data = await res.json();
@@ -1465,6 +1516,9 @@
         alert('Erro ao salvar perfil');
       }
     }
+
+    document.getElementById('profile-dob')?.addEventListener('input', updateProfileAge);
+    updateProfileAge();
 
     // WhatsApp Site Builder
     async function generateWhatsAppSite() {

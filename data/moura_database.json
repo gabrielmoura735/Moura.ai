@@ -12,7 +12,10 @@
       "theme": "cosmic_purple",
       "birthDate": "15/08/1998",
       "contentRating": "sem_filtro",
-      "imageVerificationEnabled": true
+      "imageVerificationEnabled": true,
+      "nsfwEnabled": true,
+      "adultContentAcknowledged": true,
+      "unlimitedGenerationEnabled": true
     },
     {
       "id": "5eea6eca-b7bc-484a-a9aa-04e38ad2f891",
@@ -55,6 +58,19 @@
       "researchCount": 0,
       "agentsCount": 2,
       "tokensUsed": 13700
+    },
+    {
+      "id": "a8693fe3-46bf-4b1b-ae0c-f1566ff97725",
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "date": "2026-11-14",
+      "imagesCount": 0,
+      "sitesCount": 0,
+      "saasCount": 0,
+      "enterpriseCount": 0,
+      "videosCount": 0,
+      "researchCount": 0,
+      "agentsCount": 0,
+      "tokensUsed": 0
     }
   ],
   "projects": [
@@ -216,6 +232,15 @@
       "patchApplied": "Correção automática aplicada em html.",
       "testResult": "passed",
       "status": "resolved",
+      "id": "3a0d5619-725b-4bdf-9e7f-f86c90414b45",
+      "createdAt": "2026-11-14T03:07:50.753Z"
+    },
+    {
+      "errorDetected": "Incompatibilidade de tags HTML: 2 aberturas vs 0 fechamentos de <div>.",
+      "rootCause": "Fechar as tags pendentes para garantir integridade do DOM.",
+      "patchApplied": "Correção automática aplicada em html.",
+      "testResult": "passed",
+      "status": "resolved",
       "id": "2a38593a-7838-4468-9b95-7a6a3ab2f9e4",
       "createdAt": "2026-10-24T02:22:25.245Z"
     },
@@ -266,6 +291,18 @@
     }
   ],
   "auditLogs": [
+    {
+      "id": "92ac63d3-1cf6-4559-88b1-57a6d766e295",
+      "userId": "system",
+      "action": "self_healing_cycle_completed",
+      "category": "self_healing",
+      "details": {
+        "logId": "3a0d5619-725b-4bdf-9e7f-f86c90414b45",
+        "retestPassed": true,
+        "errorType": "syntax"
+      },
+      "createdAt": "2026-11-14T03:07:50.754Z"
+    },
     {
       "id": "2ecfb79c-e848-43ff-9588-ce70ae222f77",
       "userId": "system",
@@ -458,6 +495,18 @@
     }
   ],
   "characters": [
+    {
+      "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
+      "name": "Aria Nebulosa",
+      "archetype": "Oráculo Cósmica",
+      "voiceTone": "Enigmática e sábia",
+      "backstory": "Habita a constelação Mouras-World.",
+      "promptImage": "Cosmic goddess portrait 8k",
+      "systemPrompt": "Você é Aria Nebulosa.",
+      "contentRating": "sem_filtro",
+      "id": "bc281ce6-497b-4c90-9947-f90f26a0ab8a",
+      "createdAt": "2026-11-14T03:07:50.745Z"
+    },
     {
       "userId": "d97c177c-fecd-43bf-be82-6bc2245b22b0",
       "name": "Aria Nebulosa",

@@ -47,7 +47,7 @@ async function runTestSuite() {
 
   const quota = DB.checkQuota(admin!.id, 'sites');
   assert(quota.allowed === true, 'Admin tem permissão para criar sites');
-  assert(quota.limit === 200, 'Limite do Admin no plano Galaxi é 200/dia');
+  assert(quota.unlimitedGeneration === true, 'Admin possui geração ilimitada habilitada');
 
   // 3. Teste da Logo Oficial e Favicon
   console.log(`\n▶ Teste 3: Identidade Visual e Logo Oficial Cósmica`);
@@ -62,7 +62,10 @@ async function runTestSuite() {
     birthDate: '15/08/1998',
     theme: 'cosmic_purple',
     contentRating: 'sem_filtro',
-    imageVerificationEnabled: true
+    imageVerificationEnabled: true,
+    nsfwEnabled: true,
+    adultContentAcknowledged: true,
+    unlimitedGenerationEnabled: true
   });
   assert(updatedUser?.birthDate === '15/08/1998', 'Data de nascimento dd/mm/aaaa salva com sucesso');
   assert(updatedUser?.theme === 'cosmic_purple', 'Tema Lilás Cósmico aplicado');
@@ -71,6 +74,13 @@ async function runTestSuite() {
 
   // 5. Teste da Fábrica de Personagens por IA
   console.log(`\n▶ Teste 5: Fábrica de Personagens por IA`);
+  assert(updatedUser?.nsfwEnabled === true, 'Modo NSFW adulto habilitado no perfil');
+  assert(updatedUser?.unlimitedGenerationEnabled === true, 'GeraÃ§Ã£o ilimitada habilitada no perfil');
+  const unlimitedQuota = DB.checkQuota(admin!.id, 'images');
+  assert(unlimitedQuota.allowed === true && unlimitedQuota.unlimitedGeneration === true, 'Cota de imagens ilimitada validada');
+  const unlimitedVideoQuota = DB.checkQuota(admin!.id, 'videos');
+  assert(unlimitedVideoQuota.allowed === true && unlimitedVideoQuota.unlimitedGeneration === true, 'Cota de vÃ­deos ilimitada validada');
+
   const newChar = DB.createCharacter({
     userId: admin!.id,
     name: 'Aria Nebulosa',

@@ -32,6 +32,7 @@ export const CONFIG = {
   N8N_SECRET_TOKEN: secret('N8N_SECRET_TOKEN', 'local-development-only-change-me'),
   ALLOW_DEMO_AUTH: !isProduction && process.env.ALLOW_DEMO_AUTH === 'true',
   TOKENS_UNLIMITED: process.env.TOKENS_UNLIMITED === 'true',
+  UNLIMITED_GENERATION: process.env.UNLIMITED_GENERATION !== 'false',
   CORS_ORIGINS: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:3333')
     .split(',')
     .map((origin) => origin.trim())
