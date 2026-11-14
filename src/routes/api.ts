@@ -38,6 +38,11 @@ apiRouter.post('/auth/login', (req, res) => {
     return;
   }
 
+  if (typeof password !== 'string' || password.length < 8) {
+    res.status(400).json({ error: 'Password must contain at least 8 characters.' });
+    return;
+  }
+
   const user = DB.findUserByEmail(email);
   if (!user || !bcrypt.compareSync(password, user.passwordHash)) {
     res.status(401).json({ error: 'Credenciais inválidas. Verifique seu email e senha.' });
@@ -73,6 +78,11 @@ apiRouter.post('/auth/register', (req, res) => {
   const { name, email, password, birthDate } = req.body;
   if (!name || !email || !password) {
     res.status(400).json({ error: 'Nome, email e senha são obrigatórios.' });
+    return;
+  }
+
+  if (typeof password !== 'string' || password.length < 8) {
+    res.status(400).json({ error: 'Password must contain at least 8 characters.' });
     return;
   }
 

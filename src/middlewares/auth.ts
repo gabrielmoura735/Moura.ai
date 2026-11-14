@@ -19,7 +19,7 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     // Para simplificar a experiência inicial no frontend local, se não passar token, utiliza usuário demo padrão
     const demo = DB.findUserByEmail('demo@moura.ai');
-    if (demo) {
+    if (CONFIG.ALLOW_DEMO_AUTH && demo) {
       req.user = {
         id: demo.id,
         email: demo.email,

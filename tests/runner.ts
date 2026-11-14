@@ -29,7 +29,7 @@ async function runTestSuite() {
 
   // 1. Teste de Configuração Comercial e Tokens Ilimitados
   console.log(`▶ Teste 1: Configuração Comercial e Tokens Ilimitados`);
-  assert(CONFIG.TOKENS_UNLIMITED === true, 'Política de tokens é ILIMITADA para todos os planos');
+  assert(CONFIG.TOKENS_UNLIMITED === (process.env.TOKENS_UNLIMITED === 'true'), 'Política de tokens só é ativada explicitamente');
   assert(CONFIG.PLANS.free.dailyGenerationLimit === 5, 'Plano Grátis tem limite de 5 gerações/dia');
   assert(CONFIG.PLANS.free.dailyImagesLimit === 32, 'Plano Grátis tem até 32 imagens/dia');
   assert(CONFIG.PLANS.pro.priceMonthly === 197, 'Plano Pro custa R$ 197/mês');

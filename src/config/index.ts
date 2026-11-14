@@ -1,6 +1,17 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+const isProduction = NODE_ENV === 'production';
+
+function secret(name: string, developmentFallback: string): string {
+  const value = process.env[name]?.trim();
+  if (isProduction && (!value || value.length < 32)) {
+    throw new Error(`${name} must be configured with at least 32 characters in production`);
+  }
+  return value || developmentFallback;
+}
+
 export interface PlanConfig {
   id: string;
   name: string;
@@ -16,12 +27,17 @@ export interface PlanConfig {
 
 export const CONFIG = {
   PORT: parseInt(process.env.PORT || '3000', 10),
-  NODE_ENV: process.env.NODE_ENV || 'development',
-  JWT_SECRET: process.env.JWT_SECRET || 'moura_ai_default_secret_key_2026',
-  TOKENS_UNLIMITED: process.env.TOKENS_UNLIMITED === 'true' || true,
+  NODE_ENV,
+  JWT_SECRET: secret('JWT_SECRET', 'local-development-only-change-me'),
+  N8N_SECRET_TOKEN: secret('N8N_SECRET_TOKEN', 'local-development-only-change-me'),
+  ALLOW_DEMO_AUTH: !isProduction && process.env.ALLOW_DEMO_AUTH === 'true',
+  TOKENS_UNLIMITED: process.env.TOKENS_UNLIMITED === 'true',
+  CORS_ORIGINS: (process.env.CORS_ORIGINS || 'http://localhost:3000,http://localhost:3333')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean),
   GITHUB_REPO: process.env.GITHUB_REPO || 'gabrielmoura735/Moura.ai',
   N8N_WEBHOOK_URL: process.env.N8N_WEBHOOK_URL || 'http://localhost:5678/webhook/moura-ai',
-  N8N_SECRET_TOKEN: process.env.N8N_SECRET_TOKEN || 'moura_n8n_secure_token_key',
 
   // Chaves de IA
   GEMINI_API_KEY: process.env.GEMINI_API_KEY || '',
